@@ -13,10 +13,12 @@ namespace FirstWave.Unity.Gui
     public class Frame : MonoBehaviour
     {
         private IList<Panel> panels;
+        private InputManager inputManager;
 
         void Awake()
         {
             panels = new List<Panel>();
+            inputManager = FindObjectOfType<InputManager>();
         }
 
         public void AddPanel(Panel panel)
@@ -31,15 +33,15 @@ namespace FirstWave.Unity.Gui
             // We're going to tunnel through each control in the frame and inform them of any key events
             // There are three events we're concerned with, KeyDown, KeyPressed, KeyReleased
             /// TODO: Find a better way to traverse the tree, probably caching the tree as flat list
-            foreach (var key in InputManager.Instance.allKeys)
+            foreach (var key in inputManager.allKeys)
             {
-                if (InputManager.KeyDown(key))
+                if (inputManager.KeyDown(key))
                     VisualTreeHelper.FireKeyDown(key, castControls);
 
-                if (InputManager.KeyPressed(key))
+                if (inputManager.KeyPressed(key))
                     VisualTreeHelper.FireKeyPressed(key, castControls);
 
-                if (InputManager.KeyReleased(key))
+                if (inputManager.KeyReleased(key))
                     VisualTreeHelper.FireKeyReleased(key, castControls);
             }
         }

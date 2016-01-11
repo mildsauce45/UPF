@@ -65,27 +65,21 @@ namespace FirstWave.Unity.Core.Input
             currentState.Add(DOWN, vertical < 0);  
         }
 
-        public static bool KeyReleased(string key)
+        public bool KeyReleased(string key)
         {
-            var im = Instance;
-
-            return (im.prevState.ContainsKey(key) && im.prevState[key]) &&
-                   (im.currentState.ContainsKey(key) && !im.currentState[key]);
+            return (prevState.ContainsKey(key) && prevState[key]) &&
+                   (currentState.ContainsKey(key) && !currentState[key]);
         }
 
-        public static bool KeyPressed(string key)
+        public bool KeyPressed(string key)
         {
-            var im = Instance;
-
-            return (im.prevState.ContainsKey(key) && !im.prevState[key]) &&
-                   (im.currentState.ContainsKey(key) && im.currentState[key]);
+            return (prevState.ContainsKey(key) && !prevState[key]) &&
+                   (currentState.ContainsKey(key) && currentState[key]);
         }
 
-        public static bool KeyDown(string key)
+        public bool KeyDown(string key)
         {
-            var im = Instance;
-
-            return im.currentState.ContainsKey(key) && im.currentState[key];
+            return currentState.ContainsKey(key) && currentState[key];
         }
 
         public static void Flush()
