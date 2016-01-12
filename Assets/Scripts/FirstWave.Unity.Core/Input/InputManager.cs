@@ -82,21 +82,19 @@ namespace FirstWave.Unity.Core.Input
             return currentState.ContainsKey(key) && currentState[key];
         }
 
-        public static void Flush()
+        public void Flush()
         {
-            Instance.prevState.Clear();
-            Instance.currentState.Clear();
+            prevState.Clear();
+            currentState.Clear();
         }
 
-        public static void FlushKey(string key)
+        public void FlushKey(string key)
         {
-            var im = Instance;
+            if (prevState.ContainsKey(key))
+                prevState.Remove(key);
 
-            if (im.prevState.ContainsKey(key))
-                im.prevState.Remove(key);
-
-            if (im.currentState.ContainsKey(key))
-                im.currentState.Remove(key);
+            if (currentState.ContainsKey(key))
+                currentState.Remove(key);
         }
     }
 }
