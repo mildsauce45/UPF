@@ -69,5 +69,12 @@ namespace FirstWave.Unity.Gui
 
             return Size.Value;
         }
+
+        internal override void InvalidateLayout()
+        {
+            base.InvalidateLayout();
+
+            Child.InvalidateLayout();
+        }
     }
 }

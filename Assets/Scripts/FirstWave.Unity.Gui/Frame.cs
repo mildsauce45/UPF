@@ -1,4 +1,5 @@
-﻿using FirstWave.Unity.Core.Input;
+﻿using FirstWave.Messaging;
+using FirstWave.Unity.Core.Input;
 using FirstWave.Unity.Gui.Panels;
 using FirstWave.Unity.Gui.Utilities;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace FirstWave.Unity.Gui
         {
             panels = new List<Panel>();
             inputManager = FindObjectOfType<InputManager>();
+
+            Messenger.Default.Register(this, Constants.INVALIDATE, InvalidateLayout);
         }
 
         public void AddPanel(Panel panel)
@@ -44,6 +47,12 @@ namespace FirstWave.Unity.Gui
                 if (inputManager.KeyReleased(key))
                     VisualTreeHelper.FireKeyReleased(key, castControls);
             }
+        }
+
+        private void InvalidateLayout()
+        {
+            foreach (var p in panels)
+                p.InvalidateLayout();
         }
 
         #region Unity Engine

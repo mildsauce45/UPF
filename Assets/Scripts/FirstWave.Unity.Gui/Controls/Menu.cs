@@ -1,4 +1,5 @@
-﻿using FirstWave.Unity.Core.Input;
+﻿using FirstWave.Messaging;
+using FirstWave.Unity.Core.Input;
 using FirstWave.Unity.Gui.Panels;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,8 @@ namespace FirstWave.Unity.Gui.Controls
             // Automatically select the first menu item
             if (menuItems.Count == 1)
                 SelectedIndex = 0;
+
+            Messenger.Default.SendMessage(Constants.INVALIDATE);
         }
 
         private void UpdateMenuItemSelection()
@@ -112,6 +115,13 @@ namespace FirstWave.Unity.Gui.Controls
                 SelectPreviousItem();
             else if (key == SelectKey)
                 SelectItem();
+        }
+
+        internal override void InvalidateLayout()
+        {
+            base.InvalidateLayout();
+
+            itemPanel.InvalidateLayout();
         }
     }
 }

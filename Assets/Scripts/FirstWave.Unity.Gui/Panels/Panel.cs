@@ -24,5 +24,13 @@ namespace FirstWave.Unity.Gui.Panels
                     child.Draw();
             }
         }
+
+        internal override void InvalidateLayout()
+        {
+            base.InvalidateLayout();
+
+            foreach (var c in Children)
+                c.InvalidateLayout();
+        }
     }
 }

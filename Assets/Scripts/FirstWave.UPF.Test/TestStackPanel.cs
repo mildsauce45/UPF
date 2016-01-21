@@ -17,7 +17,7 @@ public class TestStackPanel : MonoBehaviour
         }
 
         var menu = new Menu();
-        menu.AddItem("Start New Game", () => Debug.Log("Start new game"));
+        menu.AddItem("Start New Game", () => menu.AddItem("A child", () => { }));
         menu.AddItem("Continue Existing Game", () => Debug.Log("Continued Existing Game"));
 
         var sp = new StackPanel();

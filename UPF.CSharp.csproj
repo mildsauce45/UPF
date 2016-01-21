@@ -70,9 +70,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\FirstWave.Messaging\Messenger.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Bridge\IResourceLoader.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Bridge\TextureResourceLoader.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Constants.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\ContentControl.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\Menu.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\MenuItem.cs" />

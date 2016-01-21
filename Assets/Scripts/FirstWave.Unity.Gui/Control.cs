@@ -87,5 +87,11 @@ namespace FirstWave.Unity.Gui
         protected virtual void OnKeyReleased(string key)
         {
         }
+
+        internal virtual void InvalidateLayout()
+        {
+            Size = null;
+            Location = null;
+        }
     }
 }
