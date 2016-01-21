@@ -43,7 +43,9 @@ namespace FirstWave.Unity.Gui
 
         private void CheckInput()
         {
-            var castControls = panels.OfType<Control>();
+            // We want to enumerate fully here because some of the key presses below can modify the structure
+            // of the visual tree and we don't want there to be exceptions
+            var castControls = panels.OfType<Control>().ToList();
 
             // We're going to tunnel through each control in the frame and inform them of any key events
             // There are three events we're concerned with, KeyDown, KeyPressed, KeyReleased
