@@ -4,6 +4,7 @@ using FirstWave.Unity.Gui.Enums;
 using FirstWave.Unity.Gui.Panels;
 using FirstWave.Unity.Gui.Primitives;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TestStackPanel : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class TestStackPanel : MonoBehaviour
         }
 
         var menu = new Menu();
-        menu.AddItem("Start New Game", () => menu.AddItem("A child", () => { }));
+        menu.AddItem("Start New Game", () => SceneManager.LoadScene("TestLoadNewScene"));
         menu.AddItem("Continue Existing Game", () => Debug.Log("Continued Existing Game"));
 
         var sp = new StackPanel();
