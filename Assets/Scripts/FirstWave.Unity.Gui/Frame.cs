@@ -36,6 +36,11 @@ namespace FirstWave.Unity.Gui
             panels.Add(panel);
         }
 
+        public void Clear()
+        {
+            panels.Clear();
+        }
+
         private void CheckInput()
         {
             var castControls = panels.OfType<Control>();
