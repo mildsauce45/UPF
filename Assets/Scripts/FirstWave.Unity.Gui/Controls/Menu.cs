@@ -43,8 +43,12 @@ namespace FirstWave.Unity.Gui.Controls
             set { selectKey = value; }
         }
 
+        public bool AcceptingInput { get; set; }
+
         public Menu()
         {
+            AcceptingInput = true;
+
             menuItems = new List<MenuItem>();
 
             itemPanel = new StackPanel();
@@ -109,6 +113,9 @@ namespace FirstWave.Unity.Gui.Controls
 
         protected override void OnKeyReleased(string key)
         {
+            if (!AcceptingInput)
+                return;
+
             if (key == InputManager.DOWN)
                 SelectNextItem();
             else if (key == InputManager.UP)

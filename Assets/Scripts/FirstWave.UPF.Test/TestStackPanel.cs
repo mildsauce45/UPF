@@ -20,6 +20,7 @@ public class TestStackPanel : MonoBehaviour
         var menu = new Menu();
         menu.AddItem("Start New Game", () => SceneManager.LoadScene("TestLoadNewScene"));
         menu.AddItem("Continue Existing Game", () => Debug.Log("Continued Existing Game"));
+        menu.AcceptingInput = false;
 
         var sp = new StackPanel();
         sp.HorizontalAlignment = HorizontalAlignment.Center;
