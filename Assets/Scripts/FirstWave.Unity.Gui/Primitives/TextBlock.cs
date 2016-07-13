@@ -5,7 +5,14 @@ namespace FirstWave.Unity.Gui.Primitives
 {
     public class TextBlock : Control
     {
-        public string Text;
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register("Text", typeof(string), typeof(TextBlock), new PropertyMetadata(null));
+
+        public string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
 
         public TextBlock()
         {

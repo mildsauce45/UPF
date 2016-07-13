@@ -124,11 +124,11 @@ namespace FirstWave.Unity.Gui.Controls
                 SelectItem();
         }
 
-        internal override void InvalidateLayout()
+        internal override void InvalidateLayout(Control source)
         {
-            base.InvalidateLayout();
+            base.InvalidateLayout(source);
 
-            itemPanel.InvalidateLayout();
+            itemPanel.InvalidateLayout(source);
         }
     }
 }

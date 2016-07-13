@@ -6,6 +6,19 @@ namespace FirstWave.Unity.Gui.Panels
 {
     public class DockPanel : Panel
     {
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(DockPanel), new PropertyMetadata(Orientation.Horizontal));
+
+        /// <summary>
+        /// Horizontal will make left and right controls stretch to the full height of the control.
+        /// Vertical will make top and bottom stretch to the full width of the control.
+        /// </summary>
+        public Orientation Orientation
+        {
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
+
         #region Private Variables
 
         private Control left;
@@ -22,15 +35,8 @@ namespace FirstWave.Unity.Gui.Panels
 
         #endregion
 
-        /// <summary>
-        /// Horizontal will make left and right controls stretch to the full height of the control.
-        /// Vertical will make top and bottom stretch to the full width of the control.
-        /// </summary>
-        public Orientation Orientation { get; set; }
-
         public DockPanel()
         {
-            Orientation = Orientation.Horizontal;
         }
 
         public override void AddChild(Control control)

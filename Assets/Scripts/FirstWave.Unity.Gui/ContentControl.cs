@@ -15,12 +15,13 @@ namespace FirstWave.Unity.Gui
 
         public ContentControl(Control child)
         {
-            Child = child;
+            AddChild(child);
         }
 
         public void AddChild(Control child)
         {
             Child = child;
+            child.Parent = this;
         }
 
         public override void Draw()
@@ -70,11 +71,11 @@ namespace FirstWave.Unity.Gui
             return Size.Value;
         }
 
-        internal override void InvalidateLayout()
+        internal override void InvalidateLayout(Control source)
         {
-            base.InvalidateLayout();
+            base.InvalidateLayout(source);
 
-            Child.InvalidateLayout();
+            Child.InvalidateLayout(source);
         }
     }
 }

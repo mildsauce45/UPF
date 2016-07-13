@@ -7,11 +7,51 @@ namespace FirstWave.Unity.Gui.Primitives
 {
     public class Image : Control
     {
-        public Texture Texture;
+        public static readonly DependencyProperty SourceProperty =
+            DependencyProperty.Register("Source", typeof(string), typeof(Image), new PropertyMetadata(null, OnSourceChanged));
 
-        public IResourceLoader<Texture> ResourceLoader;
+        private static readonly DependencyProperty ResourceLoaderProperty =
+            DependencyProperty.Register("ResourceLoader", typeof(IResourceLoader<Texture>), typeof(Image), new PropertyMetadata(new TextureResourceLoader(), OnResourceLoaderChanged));
+
+        private static void OnSourceChanged(Control source, object oldValue, object newValue)
+        {
+            var image = (Image)source;
+            var newSource = (string)newValue;
+
+            if (newSource == null)
+                image.Texture = null;
+            else if (image.ResourceLoader != null)
+                image.Texture = image.ResourceLoader.LoadResource(newSource);
+        }
+
+        private static void OnResourceLoaderChanged(Control source, object oldValue, object newValue)
+        {
+            var image = (Image)source;
+            var loader = (IResourceLoader<Texture>)oldValue;
+
+            if (loader != null && image.Source != null)
+                image.Texture = loader.LoadResource(image.Source);
+        }
+
+        public string Source
+        {
+            get { return (string)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
+        }
+
+        public IResourceLoader<Texture> ResourceLoader
+        {
+            get { return (IResourceLoader<Texture>)GetValue(ResourceLoaderProperty); }
+            set { SetValue(ResourceLoaderProperty, value); }
+        }
+
+        private Texture Texture;
 
         #region Constructors
+
+        public Image()
+        {
+        }
 
         public Image(Texture texture)
         {
@@ -23,26 +63,13 @@ namespace FirstWave.Unity.Gui.Primitives
             ResourceLoader = resourceLoader;
         }
 
-        public Image(string resourcePath)
+        public Image(string source)
+            : this(new TextureResourceLoader())
         {
-            ResourceLoader = new TextureResourceLoader(resourcePath);
-        }
-
-        public Image(string resourcePath, string imageName)
-            : this(resourcePath)
-        {
-            Texture = ResourceLoader.LoadResource(imageName);
+            Source = source;
         }
 
         #endregion
-
-        public void LoadImage(string imageName)
-        {
-            if (ResourceLoader == null)
-                throw new InvalidOperationException("Resource Loader is not set for this image control. Cannot load " + imageName);
-
-            Texture = ResourceLoader.LoadResource(imageName);
-        }
 
         #region UPF Layout Methods
 

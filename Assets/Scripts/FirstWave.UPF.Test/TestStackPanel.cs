@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class TestStackPanel : MonoBehaviour
 {
+    private Image img;
+
     void Start()
     {
         var frame = FindObjectOfType<Frame>();
@@ -17,17 +19,29 @@ public class TestStackPanel : MonoBehaviour
             return;
         }
 
-        var menu = new Menu();
-        menu.AddItem("Start New Game", () => SceneManager.LoadScene("TestLoadNewScene"));
-        menu.AddItem("Continue Existing Game", () => Debug.Log("Continued Existing Game"));
-        menu.AcceptingInput = false;
+        //var menu = new Menu();
+        //menu.AddItem("Start New Game", () => SceneManager.LoadScene("TestLoadNewScene"));
+        //menu.AddItem("Continue Existing Game", () => Debug.Log("Continued Existing Game"));
 
         var sp = new StackPanel();
         sp.HorizontalAlignment = HorizontalAlignment.Center;
         sp.VerticalAlignment = VerticalAlignment.Center;
 
-        sp.AddChild(menu);
+        //sp.AddChild(menu);
+
+        img = new Image("Icons/fireball");
+
+        sp.AddChild(new TextBlock("Foo"));
+        sp.AddChild(img);
 
         frame.AddPanel(sp);
+    }
+
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 60, 25), "Change"))
+        {
+            img.Source = "Icons/book";
+        }
     }
 }

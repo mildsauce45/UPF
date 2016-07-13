@@ -6,11 +6,17 @@ namespace FirstWave.Unity.Gui.Panels
 {
     public class StackPanel : Panel
     {
-        public Orientation Orientation;
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(StackPanel), new PropertyMetadata(Orientation.Vertical));
+
+        public Orientation Orientation
+        {
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
 
         public StackPanel()
         {
-            Orientation = Orientation.Vertical;
         }
 
         #region Measure

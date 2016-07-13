@@ -6,8 +6,6 @@
     /// <typeparam name="T"></typeparam>
     public interface IResourceLoader<T>
     {
-        string ResourcePath { get; }
-
         T LoadResource(string name);
     }
 }

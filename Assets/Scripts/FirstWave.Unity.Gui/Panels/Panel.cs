@@ -14,6 +14,8 @@ namespace FirstWave.Unity.Gui.Panels
         public virtual void AddChild(Control control)
         {
             Children.Add(control);
+
+            control.Parent = this;
         }
 
         public override void Draw()
@@ -25,12 +27,15 @@ namespace FirstWave.Unity.Gui.Panels
             }
         }
 
-        internal override void InvalidateLayout()
+        internal override void InvalidateLayout(Control source)
         {
-            base.InvalidateLayout();
+            base.InvalidateLayout(source);
 
             foreach (var c in Children)
-                c.InvalidateLayout();
+            {
+                if (c != source)
+                    c.InvalidateLayout(source);
+            }
         }
     }
 }

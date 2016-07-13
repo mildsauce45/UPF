@@ -65,8 +65,8 @@ namespace FirstWave.Unity.Gui
 
         private void InvalidateLayout()
         {
-            foreach (var p in panels)
-                p.InvalidateLayout();
+            //foreach (var p in panels)
+            //    p.InvalidateLayout();
         }
 
         #region Unity Engine

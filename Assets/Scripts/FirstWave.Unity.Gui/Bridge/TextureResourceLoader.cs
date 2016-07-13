@@ -7,30 +7,20 @@ namespace FirstWave.Unity.Gui.Bridge
     {
         private static IDictionary<string, Texture> textureCache;
 
-        public string ResourcePath { get; set; }
-
         public TextureResourceLoader()
         {
             textureCache = new Dictionary<string, Texture>();
         }
 
-        public TextureResourceLoader(string resourcePath)
-            : this()
+        public Texture LoadResource(string resourcePath)
         {
-            ResourcePath = resourcePath;
-        }
+            if (textureCache.ContainsKey(resourcePath))
+                return textureCache[resourcePath];
 
-        public Texture LoadResource(string name)
-        {
-            var resourceKey = string.Format("{0}/{1}", ResourcePath, name);
-
-            if (textureCache.ContainsKey(resourceKey))
-                return textureCache[resourceKey];
-
-            var texture = Resources.Load(resourceKey) as Texture;
+            var texture = Resources.Load(resourcePath) as Texture;
 
             if (texture != null)
-                textureCache.Add(resourceKey, texture);
+                textureCache.Add(resourcePath, texture);
 
             return texture;
         }

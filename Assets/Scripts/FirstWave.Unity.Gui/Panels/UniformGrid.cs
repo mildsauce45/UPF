@@ -7,11 +7,17 @@ namespace FirstWave.Unity.Gui.Panels
 {
     public class UniformGrid : Panel
     {
-        public Orientation Orientation { get; set; }
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(UniformGrid), new PropertyMetadata(Orientation.Horizontal));
+
+        public Orientation Orientation
+        {
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
 
         public UniformGrid()
         {
-            Orientation = Orientation.Horizontal;
         }
 
         public override void Layout(Rect r)
