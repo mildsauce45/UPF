@@ -26,7 +26,7 @@ namespace FirstWave.Unity.Gui
             DependencyProperty.Register("Padding", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
 
         public static readonly DependencyProperty MarginProperty =
-            DependencyProperty.Register("Margin", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
+            DependencyProperty.Register("Margin", typeof(Thickness), typeof(Control), new PropertyMetadata(null));		
 
         #endregion
 
@@ -72,6 +72,8 @@ namespace FirstWave.Unity.Gui
             get { return (Thickness)GetValue(MarginProperty) ?? Thickness.ZERO; }
             set { SetValue(MarginProperty, value); }
         }
+
+		public string Name { get; set; }
 
         #endregion
 

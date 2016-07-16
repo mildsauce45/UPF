@@ -20,7 +20,6 @@
     <UnityVersion>5.3.5f1</UnityVersion>
     <RootNamespace>
     </RootNamespace>
-    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,12 +59,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -73,21 +66,23 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\FirstWave.Messaging\Messenger.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
-    <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Utilities\TypeExtensions.cs" />
-    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\DependencyProperty.cs" />
-    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\PropertyMetadata.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestSecondGUI.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestStackPanel.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestViewViewModel.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Utilities\SafeSingleton.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Utilities\StringExtensions.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Utilities\TypeExtensions.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\BorderTextures.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Bridge\IResourceLoader.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Bridge\TextureResourceLoader.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Constants.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\ContentControl.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Control.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\Button.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\Menu.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\MenuItem.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\DependencyProperty.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Drawing\BorderBox.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Enums\Dock.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Enums\HorizontalAlignment.cs" />
@@ -104,10 +99,17 @@
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Panels\UniformGrid.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Primitives\Image.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Primitives\TextBlock.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\PropertyMetadata.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Thickness.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\TypeConverters\ThicknessTypeConverter.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\TypeConverters\TypeConverter.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\VisualTreeHelper.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\XamlProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\UPF\Combat.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assets\Resources\UPF\TestView.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

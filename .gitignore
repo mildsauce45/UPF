@@ -27,6 +27,8 @@ $RECYCLE.BIN/
 Temp/
 Library/
 
+obj/
+
 # =========================
 # Operating System Files
 # =========================

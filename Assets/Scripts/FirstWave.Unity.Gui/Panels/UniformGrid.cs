@@ -70,9 +70,13 @@ namespace FirstWave.Unity.Gui.Panels
             if (Orientation == Orientation.Horizontal)
             {
                 float childMaxWidth = childSizes.Select(cs => cs.x).Max();
-                width = childMaxWidth * Children.Count;
+                width = childMaxWidth * Children.Count;				
 
                 height = childSizes.Select(cs => cs.y).Max();
+
+				// Now reset each childs size to the biggest both in heighth and width
+				foreach(var child in Children)
+                    child.Size = new Vector2(childMaxWidth, height);
             }
             else
             {
@@ -80,6 +84,9 @@ namespace FirstWave.Unity.Gui.Panels
                 height = childMaxHeight * Children.Count;
 
                 width = childSizes.Select(cs => cs.x).Max();
+
+				foreach (var child in Children)
+					child.Size = new Vector2(width, childMaxHeight);
             }
 
             Size = new Vector2(width, height);
