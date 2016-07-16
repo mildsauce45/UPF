@@ -1,5 +1,4 @@
-﻿using FirstWave.Messaging;
-using FirstWave.Unity.Gui.Enums;
+﻿using FirstWave.Unity.Gui.Enums;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +25,10 @@ namespace FirstWave.Unity.Gui
             DependencyProperty.Register("Padding", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
 
         public static readonly DependencyProperty MarginProperty =
-            DependencyProperty.Register("Margin", typeof(Thickness), typeof(Control), new PropertyMetadata(null));		
+            DependencyProperty.Register("Margin", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty DataContextProperty =
+            DependencyProperty.Register("DataContext", typeof(object), typeof(Control), new PropertyMetadata(null));
 
         #endregion
 
@@ -73,7 +75,13 @@ namespace FirstWave.Unity.Gui
             set { SetValue(MarginProperty, value); }
         }
 
-		public string Name { get; set; }
+        public object DataContext
+        {
+            get { return GetValue(DataContextProperty); }
+            set { SetValue(DataContextProperty, value); }
+        }
+
+        public string Name { get; set; }
 
         #endregion
 

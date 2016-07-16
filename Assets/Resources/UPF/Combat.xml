@@ -1,4 +1,10 @@
 ﻿<View>
+  <Resources>
+    <Template Key="Enemy">
+      <Image Source="Images/KefkaAngel"/>
+    </Template> 
+  </Resources>
+  
   <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10">
     <Border Padding="10">
       <StackPanel>
@@ -31,6 +37,8 @@
     <Image Source="Images/KefkaAngel" Margin="10,0"/>
     <Image Source="Images/KefkaAngel"/>
   </StackPanel>
+
+  <ItemsControl ItemTemplate="{Resource Enemy}" />
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10, 10, 10, 70">    
     <TextBlock Text="You have encountered a bunch of angels." VerticalAlignment="Top" HorizontalAlignment="Left"/>

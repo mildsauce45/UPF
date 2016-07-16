@@ -66,6 +66,10 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\FirstWave.Messaging\Messenger.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\ItemsControl.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\MarkupExtension.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\ResourceMarkupExtension.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Template.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestSecondGUI.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestStackPanel.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestViewViewModel.cs" />
