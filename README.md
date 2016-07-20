@@ -8,6 +8,10 @@ components that shared much, but not enough code to display. I found myself want
 WPF, so I decided to give it a shot creating something along those lines. The is a first pass attempt and is lacking many of the niceties
 of the WPF framework, most notably templating and data binding, but it solves my basic needs for the moment.
 
+### Examples
+
+![img](https://github.com/mildsauce45/UPF/blob/master/Examples/Images/CombatScreen.png)
+
 ### Next Up
 
 * XAML-like markup - Much of WPF's ease of use comes from this and it would be nice to have
