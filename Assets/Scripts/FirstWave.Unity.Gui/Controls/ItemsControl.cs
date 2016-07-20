@@ -15,8 +15,8 @@ namespace FirstWave.Unity.Gui.Controls
         public static readonly DependencyProperty ItemTemplateProperty =
             DependencyProperty.Register("ItemTemplate", typeof(Template), typeof(ItemsControl));
 
-        public static readonly DependencyProperty ItemsPanelProperty =
-            DependencyProperty.Register("ItemsPanel", typeof(Panel), typeof(ItemsControl), new PropertyMetadata(new StackPanel()));
+        public static readonly DependencyProperty ItemsPanelTemplateProperty =
+            DependencyProperty.Register("ItemsPanelTemplate", typeof(Template), typeof(ItemsControl));
 
         public IEnumerable ItemsSource
         {
@@ -30,13 +30,15 @@ namespace FirstWave.Unity.Gui.Controls
             set { SetValue(ItemTemplateProperty, value); }
         }
 
-        public Panel ItemsPanel
+        public Template ItemsPanelTemplate
         {
-            get { return (Panel)GetValue(ItemsPanelProperty); }
-            set { SetValue(ItemsPanelProperty, value); }
+            get { return (Template)GetValue(ItemsPanelTemplateProperty); }
+            set { SetValue(ItemsPanelTemplateProperty, value); }
         }
 
         #endregion
+
+        private Panel generatedPanel;
 
         #region UPF Engine
 
@@ -46,9 +48,7 @@ namespace FirstWave.Unity.Gui.Controls
                 return Size.Value;
 
             // Clear out any existing children and pseudo-invalidate the panel
-            ItemsPanel.Children.Clear();
-            ItemsPanel.Size = null;
-            ItemsPanel.Location = null;
+            generatedPanel = ItemsPanelTemplate == null ? new StackPanel() : ItemsPanelTemplate.GenerateItem(DataContext) as Panel;
 
             if (ItemsSource == null || ItemsSource.OfType<object>().Count() == 0)
             {
@@ -59,10 +59,10 @@ namespace FirstWave.Unity.Gui.Controls
 
             // Now let's add back in any children items we need
             foreach (var item in ItemsSource)
-                ItemsPanel.AddChild(ItemTemplate.GenerateItem(item));
+                generatedPanel.AddChild(ItemTemplate.GenerateItem(item));
 
             // Now let's measure the size of the panel
-            var size = ItemsPanel.Measure();
+            var size = generatedPanel.Measure();
 
             Size = size;
 
@@ -74,12 +74,12 @@ namespace FirstWave.Unity.Gui.Controls
             if (Location.HasValue)
                 return;
 
-            ItemsPanel.Layout(r);
+            generatedPanel.Layout(r);
         }
 
         public override void Draw()
         {
-            ItemsPanel.Draw();
+            generatedPanel.Draw();
         }
 
         #endregion

@@ -1,48 +1,33 @@
 ﻿<View>
   <Resources>
     <Template Key="EnemyTemplate">
-      <Image Source="{Binding Sprite}"/>
+      <Image Source="{Binding Sprite}" Margin="5,0"/>
     </Template>
     
     <Template Key="EnemyPanelTemplate">
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal"/>
     </Template>
+  
+    <Template Key="PartyMemberInfoTemplate">
+      <Border Padding="10">
+        <StackPanel>
+          <TextBlock Text="{Binding Name}"/>
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="HP:"/>
+            <TextBlock Text="{Binding HP}" Margin="5,0,0,0"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Template>
+  
+    <Template Key="PartyMemberPanelTemplate">
+      <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10"/>
+    </Template>
   </Resources>
   
-  <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10">
-    <Border Padding="10">
-      <StackPanel>
-        <TextBlock Text="Cloud"/>
-        <TextBlock Text="HP: 10"/>
-      </StackPanel>
-    </Border>
-    <Border Padding="10">
-      <StackPanel Name="sTextBlock">
-        <TextBlock Text="Sephiroth"/>
-        <TextBlock Text="HP: 999"/>
-      </StackPanel>
-    </Border>
-    <Border Padding="10">
-      <StackPanel>
-        <TextBlock Text="Drizzt"/>
-        <TextBlock Text="HP: ∞"/>
-      </StackPanel>
-    </Border>
-    <Border Padding="10">
-      <StackPanel>
-        <TextBlock Text="Aeris"/>
-        <TextBlock Text="HP: 1"/>
-      </StackPanel>
-    </Border>
-  </UniformGrid>
+  <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>
 
-  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-    <Image Source="Images/KefkaAngel"/>
-    <Image Source="Images/KefkaAngel" Margin="10,0"/>
-    <Image Source="Images/KefkaAngel"/>
-  </StackPanel>
-
-  <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" />
+  <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10, 10, 10, 70">    
     <TextBlock Text="You have encountered a bunch of angels." VerticalAlignment="Top" HorizontalAlignment="Left"/>
