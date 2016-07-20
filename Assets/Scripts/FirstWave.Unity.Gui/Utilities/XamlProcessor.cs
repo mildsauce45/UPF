@@ -1,4 +1,5 @@
 ﻿using FirstWave.Unity.Core.Utilities;
+using FirstWave.Unity.Gui.Data;
 using FirstWave.Unity.Gui.MarkupExtensions;
 using FirstWave.Unity.Gui.Panels;
 using FirstWave.Unity.Gui.TypeConverters;
@@ -64,9 +65,13 @@ namespace FirstWave.Unity.Gui.Utilities
                         var panel = Activator.CreateInstance(panelType) as Panel;
                         panels.Add(panel);
 
-                        LoadPanel(panel, panelXml, viewModel);
+						LoadAttributes(panel, panelXml, viewModel);
 
-                        LoadAttributes(panel, panelXml, viewModel);
+						// The top-most panel/controls are going to get their DataContexts set to the passed in view model
+						if (panel.DataContext == null)
+							panel.DataContext = viewModel;
+
+						LoadPanel(panel, panelXml, viewModel);                        
                     }
                     else
                         Debug.LogError("Could not locate panel class for type: " + panelXml.LocalName);
@@ -85,7 +90,7 @@ namespace FirstWave.Unity.Gui.Utilities
                     continue;
 
                 if (rn.LocalName == "Template")
-                    resources.Add(itemKey.Value, new Template(rn.FirstChild));
+                    resources.Add(itemKey.Value, new Template(rn));
             }
         }
 
@@ -101,10 +106,11 @@ namespace FirstWave.Unity.Gui.Utilities
 					var child = Activator.CreateInstance(childType);
 					panel.AddChild(child as Control);
 
-					if (child is Panel)
-						LoadPanel(child as Panel, childNode, viewModel);
-
+					// Load attributes first, in case this is a panel
 					LoadAttributes(child as Control, childNode, viewModel);
+
+					if (child is Panel)
+						LoadPanel(child as Panel, childNode, viewModel);					
 				}
 				else
 					Debug.LogError("Could not locate class for type: " + childNode.LocalName);
@@ -140,21 +146,27 @@ namespace FirstWave.Unity.Gui.Utilities
 			if (pi.PropertyType.IsEnumOrNullableEnum())
 				value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
 			
-			else if (pi.PropertyType != STRING_TYPE)
+			else 
 			{
-				// String values don't need to be converted
-				var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
-                if (tc != null)
-                    value = tc.ConvertTo(value);
-                else if (((string)value).StartsWith("{"))
-                    // If we start with the curly brace, then we're going to try and load a markup extension
-                    value = LoadMarkupExtension((string)value);
-                else
+				if (((string)value).StartsWith("{"))
+					// If we start with the curly brace, then we're going to try and load a markup extension
+					value = LoadMarkupExtension((string)value, control);
+				else if (pi.PropertyType != STRING_TYPE)
+				{
+					// String values don't need to be converted
+					var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
+					if (tc != null)
+						value = tc.ConvertTo(value);
+				}
+				else if (pi.PropertyType != STRING_TYPE)
 					// This is probably just converting between primitive types (or we're missing a type converter)
 					value = Convert.ChangeType(value, pi.PropertyType);
 			}
 
-			pi.SetValue(control, value, null);
+			if (value is Binding)
+				control.SetBinding(control.GetDependencyProperty(attr.LocalName), value as Binding);
+			else
+				pi.SetValue(control, value, null);
 		}
 
 		private static void LoadEvent(Control control, XmlAttribute attr, EventInfo ei, object viewModel)
@@ -172,7 +184,7 @@ namespace FirstWave.Unity.Gui.Utilities
 			ei.AddEventHandler(control, handler);
 		}
 
-        private static object LoadMarkupExtension(string value)
+        private static object LoadMarkupExtension(string value, Control control)
         {
             var data = value.Substring(1, value.Length - 2);
 
@@ -187,7 +199,7 @@ namespace FirstWave.Unity.Gui.Utilities
 ;
             var parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
 
-            extension.Load(parms);
+            extension.Load(control, parms);
 
             return extension.GetValue();
         }

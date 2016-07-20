@@ -78,6 +78,10 @@ namespace FirstWave.Unity.Gui.Primitives
             if (Size.HasValue)
                 return Size.Value;
 
+			// One last ditch attempt at loading the texture (in case of a binding)
+			if (ResourceLoader != null)
+				Texture = ResourceLoader.LoadResource(Source);
+
             if (Texture == null)
                 throw new InvalidOperationException("Cannot measure image without a texture object");
 

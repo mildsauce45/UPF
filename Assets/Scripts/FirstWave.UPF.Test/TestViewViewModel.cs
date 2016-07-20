@@ -1,16 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace FirstWave.UPF.Test
 {
 	public class TestViewViewModel
 	{
-		public void CastClicked(object sender, EventArgs e)
+		public IList<Enemy> Enemies { get; private set; }
+
+		public TestViewViewModel()
 		{
-			Debug.Log("Button Clicked");
+			Enemies = new List<Enemy>();
+			Enemies.Add(new Enemy());
+			Enemies.Add(new Enemy());
+			Enemies.Add(new Enemy());
 		}
+	}
+
+	public class Enemy
+	{
+		public string Sprite
+		{
+			get { return "Images/KefkaAngel"; }
+        }	
 	}
 }

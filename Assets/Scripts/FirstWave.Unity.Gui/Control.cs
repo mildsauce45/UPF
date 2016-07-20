@@ -1,217 +1,282 @@
-﻿using FirstWave.Unity.Gui.Enums;
+﻿using FirstWave.Unity.Core.Utilities;
+using FirstWave.Unity.Gui.Data;
+using FirstWave.Unity.Gui.Enums;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace FirstWave.Unity.Gui
 {
-    // Base class for all controls, contains the common properties such as location, size, alignments, etc
-    public abstract class Control
-    {
-        private static readonly Type OBJECT_TYPE = typeof(object);
+	// Base class for all controls, contains the common properties such as location, size, alignments, etc
+	public abstract class Control
+	{
+		private static readonly Type OBJECT_TYPE = typeof(object);
 
-        #region Dependency Properties
+		#region Dependency Properties
 
-        public static readonly DependencyProperty VisibilityProperty =
-            DependencyProperty.Register("Visibility", typeof(Visibility), typeof(Control), new PropertyMetadata(Visibility.Visible));
+		public static readonly DependencyProperty VisibilityProperty =
+			DependencyProperty.Register("Visibility", typeof(Visibility), typeof(Control), new PropertyMetadata(Visibility.Visible));
 
-        public static readonly DependencyProperty HorizontalAlignmentProperty =
-            DependencyProperty.Register("HorizontalAlignment", typeof(HorizontalAlignment?), typeof(Control), new PropertyMetadata(null));
+		public static readonly DependencyProperty HorizontalAlignmentProperty =
+			DependencyProperty.Register("HorizontalAlignment", typeof(HorizontalAlignment?), typeof(Control), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty VerticalAlignmentProperty =
-            DependencyProperty.Register("VerticalAlignment", typeof(VerticalAlignment?), typeof(Control), new PropertyMetadata(null));
+		public static readonly DependencyProperty VerticalAlignmentProperty =
+			DependencyProperty.Register("VerticalAlignment", typeof(VerticalAlignment?), typeof(Control), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty PaddingProperty =
-            DependencyProperty.Register("Padding", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
+		public static readonly DependencyProperty PaddingProperty =
+			DependencyProperty.Register("Padding", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty MarginProperty =
-            DependencyProperty.Register("Margin", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
+		public static readonly DependencyProperty MarginProperty =
+			DependencyProperty.Register("Margin", typeof(Thickness), typeof(Control), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty DataContextProperty =
-            DependencyProperty.Register("DataContext", typeof(object), typeof(Control), new PropertyMetadata(null));
+		public static readonly DependencyProperty DataContextProperty =
+			DependencyProperty.Register("DataContext", typeof(object), typeof(Control), new PropertyMetadata(null));
 
-        #endregion
+		#endregion
 
-        private IDictionary<string, object> dependencyPropertyValues;
+		private IDictionary<string, object> dependencyPropertyValues;
 
-        public Vector2? Location { get; set; }
+		public Vector2? Location { get; set; }
 
-        /// <summary>
-        /// If set, Measure() is not called
-        /// </summary>
-        public Vector2? Size;
+		/// <summary>
+		/// If set, Measure() is not called
+		/// </summary>
+		public Vector2? Size;
 
-        public Control Parent { get; internal set; }
+		public Control Parent { get; internal set; }
 
-        #region Properties
+		#region Properties
 
-        public Visibility Visibility
-        {
-            get { return (Visibility)GetValue(VisibilityProperty); }
-            set { SetValue(VisibilityProperty, value); }
-        }
+		public Visibility Visibility
+		{
+			get { return (Visibility)GetValue(VisibilityProperty); }
+			set { SetValue(VisibilityProperty, value); }
+		}
 
-        public HorizontalAlignment? HorizontalAlignment
-        {
-            get { return (HorizontalAlignment?)GetValue(HorizontalAlignmentProperty); }
-            set { SetValue(HorizontalAlignmentProperty, value); }
-        }
+		public HorizontalAlignment? HorizontalAlignment
+		{
+			get { return (HorizontalAlignment?)GetValue(HorizontalAlignmentProperty); }
+			set { SetValue(HorizontalAlignmentProperty, value); }
+		}
 
-        public VerticalAlignment? VerticalAlignment
-        {
-            get { return (VerticalAlignment?)GetValue(VerticalAlignmentProperty); }
-            set { SetValue(VerticalAlignmentProperty, value); }
-        }
+		public VerticalAlignment? VerticalAlignment
+		{
+			get { return (VerticalAlignment?)GetValue(VerticalAlignmentProperty); }
+			set { SetValue(VerticalAlignmentProperty, value); }
+		}
 
-        public Thickness Padding
-        {
-            get { return (Thickness)GetValue(PaddingProperty) ?? Thickness.ZERO; }
-            set { SetValue(PaddingProperty, value); }
-        }
+		public Thickness Padding
+		{
+			get { return (Thickness)GetValue(PaddingProperty) ?? Thickness.ZERO; }
+			set { SetValue(PaddingProperty, value); }
+		}
 
-        public Thickness Margin
-        {
-            get { return (Thickness)GetValue(MarginProperty) ?? Thickness.ZERO; }
-            set { SetValue(MarginProperty, value); }
-        }
+		public Thickness Margin
+		{
+			get { return (Thickness)GetValue(MarginProperty) ?? Thickness.ZERO; }
+			set { SetValue(MarginProperty, value); }
+		}
 
-        public object DataContext
-        {
-            get { return GetValue(DataContextProperty); }
-            set { SetValue(DataContextProperty, value); }
-        }
+		public object DataContext
+		{
+			get { return GetValue(DataContextProperty); }
+			set { SetValue(DataContextProperty, value); }
+		}
 
-        public string Name { get; set; }
+		public string Name { get; set; }
 
-        #endregion
+		#endregion
 
-        public Control()
-        {
-            dependencyPropertyValues = new Dictionary<string, object>();
+		public Control()
+		{
+			dependencyPropertyValues = new Dictionary<string, object>();
 
-            InitDependencyProperties();
-        }
+			InitDependencyProperties();
+		}
 
-        protected void SetValue(DependencyProperty property, object value)
-        {
-            if (property == null)
-                throw new ArgumentNullException("You must supply a DependencyProperty object.");
+		#region Dependency Property Helpers
 
-            object oldValue = GetValue(property);
+		protected void SetValue(DependencyProperty property, object value)
+		{
+			if (property == null)
+				throw new ArgumentNullException("You must supply a DependencyProperty object.");
 
-            if (!Equals(oldValue, value))
-            {
-                dependencyPropertyValues[property.Name] = value;
+			object oldValue = GetValue(property);
 
-                // If the property is supposed to recalculate the the layout of the control call the InvalidateLayout
-                if (property.Metadata != null && property.Metadata.AffectsLayout)
-                    InvalidateLayout(this);
+			if (!Equals(oldValue, value))
+			{
+				dependencyPropertyValues[property.Name] = value;
 
-                // Call the change handler for the property if one exists
-                if (property.Metadata.OnChangeHandler != null)
-                    property.Metadata.OnChangeHandler(this, oldValue, value);
-            }
-        }
+				// If the property is supposed to recalculate the the layout of the control call the InvalidateLayout
+				if (property.Metadata != null && property.Metadata.AffectsLayout)
+					InvalidateLayout(this);
 
-        protected object GetValue(DependencyProperty property)
-        {
-            if (property == null)
-                throw new ArgumentNullException("You must supply a DependencyProperty object.");
+				// Call the change handler for the property if one exists
+				if (property.Metadata.OnChangeHandler != null)
+					property.Metadata.OnChangeHandler(this, oldValue, value);
+			}
+		}
 
-            return dependencyPropertyValues.ContainsKey(property.Name) ? dependencyPropertyValues[property.Name] : property.Metadata.DefaultValue;
-        }
+		protected object GetValue(DependencyProperty property)
+		{
+			if (property == null)
+				throw new ArgumentNullException("You must supply a DependencyProperty object.");
 
-        public abstract Vector2 Measure();
-        public abstract void Layout(Rect r);
-        public abstract void Draw();
+			if (!dependencyPropertyValues.ContainsKey(property.Name))
+				return property.PropType.Default();
 
-        protected float GetStartingXCoordinate(Rect r)
-        {
-            float x = r.x;
+			// If we set a binding on this property, then we need to query the binding for the value, not the pass back the binding
+			var obj = dependencyPropertyValues[property.Name];
+			if (obj is Binding)
+				return (obj as Binding).GetValue();
 
-            if (!HorizontalAlignment.HasValue || HorizontalAlignment == Enums.HorizontalAlignment.Left || HorizontalAlignment == Enums.HorizontalAlignment.Stretch)
-            {
-                x = r.x + Margin.Left;
-            }
-            else if (HorizontalAlignment == Enums.HorizontalAlignment.Right)
-            {
-                x = r.x + r.width - Margin.Right - (Size.HasValue ? Size.Value.x : 0);
-            }
-            else if (HorizontalAlignment == Enums.HorizontalAlignment.Center)
-            {
-                x = r.x + r.width / 2 - (Size.HasValue ? Size.Value.x : 0) / 2;
-            }
+			// Otherwise return what's here
+			return obj;
+		}
 
-            return x;
-        }
+		#endregion
 
-        protected float GetStartingYCoordinate(Rect r)
-        {
-            float y = r.y;
+		#region Binding Helpers
 
-            if (!VerticalAlignment.HasValue || VerticalAlignment == Enums.VerticalAlignment.Top || VerticalAlignment == Enums.VerticalAlignment.Stretch)
-            {
-                y = r.y + Margin.Top;
-            }
-            else if (VerticalAlignment == Enums.VerticalAlignment.Bottom)
-            {
-                y = r.y + r.height - (Size.HasValue ? Size.Value.y : 0) - Margin.Bottom;
-            }
-            else if (VerticalAlignment == Enums.VerticalAlignment.Center)
-            {
-                y = r.y + r.height / 2 - (Size.HasValue ? Size.Value.y : 0) / 2;
-            }
+		public void SetBinding(DependencyProperty property, Binding binding)
+		{
+			if (property == null)
+				throw new ArgumentNullException("You must supply a DependencyProperty object.");
 
-            return y;
-        }
+			// We don't want to go through SetValue because we're not passing in a concrete object, we're passing in an object
+			// that know's how to retrieve the item of that type.
+			dependencyPropertyValues[property.Name] = binding;
+		}
 
-        protected virtual void OnKeyDown(string key)
-        {
-        }
+		// Right now this is needed because I'm still having that weird issue with the System.Type hashcode not matching up in the Xaml processor
+		// I'd prefer to remove this and just let the typing handle everything
+		internal DependencyProperty GetDependencyProperty(string name)
+		{
+			var type = GetType();
 
-        protected virtual void OnKeyPressed(string key)
-        {
-        }
+			do
+			{
+				if (DependencyProperty.registeredPropertiesByOwner.ContainsKey(type))
+				{
+					var depProps = DependencyProperty.registeredPropertiesByOwner[type];
+					foreach (var dp in depProps)
+					{
+						if (dp.Name == name)
+							return dp;
+					}
+	            }
 
-        protected virtual void OnKeyReleased(string key)
-        {
-        }
+				type = type.BaseType;
+			} while (type != OBJECT_TYPE);
 
-        internal virtual void InvalidateLayout(Control source)
-        {
-            Size = null;
-            Location = null;
+			return null;
+		}
 
-            if (this != source)
-                return;
+		#endregion
 
-            // Now let's invalidate the entire leaf of this tree so we can properly recalculate/redraw
-            var ctrl = Parent;
-            while (ctrl != null)
-            {
-                ctrl.InvalidateLayout(this);
-                ctrl = ctrl.Parent;
-            }
-        }
+		#region UPF Methods
 
-        private void InitDependencyProperties()
-        {
-            var type = GetType();
+		public abstract Vector2 Measure();
+		public abstract void Layout(Rect r);
+		public abstract void Draw();
 
-            do
-            {
-                if (DependencyProperty.registeredPropertiesByOwner.ContainsKey(type))
-                {
-                    var depProps = DependencyProperty.registeredPropertiesByOwner[type];
-                    foreach (var dp in depProps)
-                    {
-                        dependencyPropertyValues.Add(dp.Name, dp.Metadata.DefaultValue);
-                    }
-                }
+		#endregion
 
-                type = type.BaseType;
+		#region Layout Helpers
 
-            } while (type != OBJECT_TYPE);
-        }
-    }
+		protected float GetStartingXCoordinate(Rect r)
+		{
+			float x = r.x;
+
+			if (!HorizontalAlignment.HasValue || HorizontalAlignment == Enums.HorizontalAlignment.Left || HorizontalAlignment == Enums.HorizontalAlignment.Stretch)
+			{
+				x = r.x + Margin.Left;
+			}
+			else if (HorizontalAlignment == Enums.HorizontalAlignment.Right)
+			{
+				x = r.x + r.width - Margin.Right - (Size.HasValue ? Size.Value.x : 0);
+			}
+			else if (HorizontalAlignment == Enums.HorizontalAlignment.Center)
+			{
+				x = r.x + r.width / 2 - (Size.HasValue ? Size.Value.x : 0) / 2;
+			}
+
+			return x;
+		}
+
+		protected float GetStartingYCoordinate(Rect r)
+		{
+			float y = r.y;
+
+			if (!VerticalAlignment.HasValue || VerticalAlignment == Enums.VerticalAlignment.Top || VerticalAlignment == Enums.VerticalAlignment.Stretch)
+			{
+				y = r.y + Margin.Top;
+			}
+			else if (VerticalAlignment == Enums.VerticalAlignment.Bottom)
+			{
+				y = r.y + r.height - (Size.HasValue ? Size.Value.y : 0) - Margin.Bottom;
+			}
+			else if (VerticalAlignment == Enums.VerticalAlignment.Center)
+			{
+				y = r.y + r.height / 2 - (Size.HasValue ? Size.Value.y : 0) / 2;
+			}
+
+			return y;
+		}
+
+		internal virtual void InvalidateLayout(Control source)
+		{
+			Size = null;
+			Location = null;
+
+			if (this != source)
+				return;
+
+			// Now let's invalidate the entire leaf of this tree so we can properly recalculate/redraw
+			var ctrl = Parent;
+			while (ctrl != null)
+			{
+				ctrl.InvalidateLayout(this);
+				ctrl = ctrl.Parent;
+			}
+		}
+
+		#endregion
+
+		#region Input Handlers
+
+		protected virtual void OnKeyDown(string key)
+		{
+		}
+
+		protected virtual void OnKeyPressed(string key)
+		{
+		}
+
+		protected virtual void OnKeyReleased(string key)
+		{
+		}
+
+		#endregion
+
+		private void InitDependencyProperties()
+		{
+			var type = GetType();
+
+			do
+			{
+				if (DependencyProperty.registeredPropertiesByOwner.ContainsKey(type))
+				{
+					var depProps = DependencyProperty.registeredPropertiesByOwner[type];
+					foreach (var dp in depProps)
+					{
+						dependencyPropertyValues.Add(dp.Name, dp.Metadata.DefaultValue);
+					}
+				}
+
+				type = type.BaseType;
+
+			} while (type != OBJECT_TYPE);
+		}
+	}
 }

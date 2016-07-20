@@ -5,6 +5,6 @@
         public abstract string Key { get; }
 
         public abstract object GetValue();
-        public abstract void Load(string[] parms);
+        public abstract void Load(Control c, string[] parms);
     }
 }
