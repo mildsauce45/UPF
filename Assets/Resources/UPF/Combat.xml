@@ -30,6 +30,6 @@
   <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10, 10, 10, 70">    
-    <TextBlock Text="You have encountered a bunch of angels." VerticalAlignment="Top" HorizontalAlignment="Left"/>
+    <TextBlock Text="{Binding Message}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
   </Border>
 </View>

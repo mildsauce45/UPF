@@ -7,6 +7,8 @@ namespace FirstWave.UPF.Test
 		public IList<Enemy> Enemies { get; private set; }
         public IList<PartyMember> Party { get; private set; }
 
+		public string Message { get; private set; }
+
 		public TestViewViewModel()
 		{
 			Enemies = new List<Enemy>();
@@ -19,6 +21,8 @@ namespace FirstWave.UPF.Test
             Party.Add(new PartyMember { Name = "Sephiroth", HP = "999" });
             Party.Add(new PartyMember { Name = "Drizzt", HP = "∞" });
             Party.Add(new PartyMember { Name = "Aeris", HP = "1" });
+
+			Message = "You have encountered a bunch of angels.";
 		}
 	}
 
