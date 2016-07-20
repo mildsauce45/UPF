@@ -1,8 +1,5 @@
 ﻿using FirstWave.Unity.Gui.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FirstWave.Unity.Gui.MarkupExtensions
 {
@@ -12,7 +9,8 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 
 		public override string Key { get { return "Binding"; } }
 
-		public string Path { get; private set; }		
+		public string Path { get; private set; }
+		public BindingMode Mode { get; private set; }
 
 		// Unused right now, but I see an eventual need for it
 		public string ElementName { get; private set; }
@@ -30,14 +28,19 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 
 				if (parts.Length == 1)
 					Path = parts[0];
-				else if (parts.Length == 2 && parts[0] == "Path")
-					Path = parts[1];
+				else if (parts.Length == 2)
+				{
+					if (parts[0] == "Path")
+						Path = parts[1];
+					else if (parts[0] == "Mode")
+						Mode = (BindingMode)Enum.Parse(typeof(BindingMode), parts[1]);
+				}
 			}
 		}
 
 		public override object GetValue()
 		{
-			return new Binding(target) { Path = this.Path };
+			return new Binding(target) { Path = Path, Mode = Mode };
 		}
 	}
 }

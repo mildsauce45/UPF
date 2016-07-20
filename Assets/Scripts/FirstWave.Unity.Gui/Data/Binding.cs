@@ -8,6 +8,7 @@
 		public object DataContext { get; set; }
 		public string Path { get; set; }
 		public string ElementName { get; set; }
+		public BindingMode Mode { get; set; }
 
 		public object Source
 		{
@@ -24,6 +25,8 @@
 		public Binding(object target)
 		{
 			this.target = target;
+
+			Mode = BindingMode.OneWay;
 		}
 
 		public object GetValue()

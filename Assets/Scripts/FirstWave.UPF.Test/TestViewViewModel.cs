@@ -1,13 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using FirstWave.Unity.Gui.Data;
+using System.Collections.Generic;
 
 namespace FirstWave.UPF.Test
 {
-	public class TestViewViewModel
+	public class TestViewViewModel : INotifyPropertyChanged
 	{
-		public IList<Enemy> Enemies { get; private set; }
-        public IList<PartyMember> Party { get; private set; }
+		private string message;
 
-		public string Message { get; private set; }
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public IList<Enemy> Enemies { get; private set; }
+		public IList<PartyMember> Party { get; private set; }
+
+		public string Message
+		{
+			get { return message; }
+			set
+			{
+				message = value;
+				SafeRaisePropertyChanged("Message");
+			}
+		}
 
 		public TestViewViewModel()
 		{
@@ -16,13 +29,19 @@ namespace FirstWave.UPF.Test
 			Enemies.Add(new Enemy());
 			Enemies.Add(new Enemy());
 
-            Party = new List<PartyMember>();
-            Party.Add(new PartyMember { Name = "Cloud", HP = "10" });
-            Party.Add(new PartyMember { Name = "Sephiroth", HP = "999" });
-            Party.Add(new PartyMember { Name = "Drizzt", HP = "∞" });
-            Party.Add(new PartyMember { Name = "Aeris", HP = "1" });
+			Party = new List<PartyMember>();
+			Party.Add(new PartyMember { Name = "Cloud", HP = "10" });
+			Party.Add(new PartyMember { Name = "Sephiroth", HP = "999" });
+			Party.Add(new PartyMember { Name = "Drizzt", HP = "∞" });
+			Party.Add(new PartyMember { Name = "Aeris", HP = "1" });
 
-			Message = "You have encountered a bunch of angels.";
+			message = "You have encountered a bunch of angels.";
+		}
+
+		private void SafeRaisePropertyChanged(string propName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propName));
 		}
 	}
 
@@ -31,12 +50,12 @@ namespace FirstWave.UPF.Test
 		public string Sprite
 		{
 			get { return "Images/KefkaAngel"; }
-        }	
+		}
 	}
 
-    public class PartyMember
-    {
-        public string Name { get; set; }
-        public string HP { get; set; }
-    }
+	public class PartyMember
+	{
+		public string Name { get; set; }
+		public string HP { get; set; }
+	}
 }

@@ -68,6 +68,10 @@
     <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\ItemsControl.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\Binding.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\BindingMode.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\INotifyPropertyChanged.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\PropertyChangedEventArgs.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\PropertyChangedEventHandler.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\BindingMarkupExtension.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\MarkupExtension.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\ResourceMarkupExtension.cs" />
