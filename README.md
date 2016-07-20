@@ -14,7 +14,8 @@ of the WPF framework, most notably templating and data binding, but it solves my
 
 ### Next Up
 
-* XAML-like markup - Much of WPF's ease of use comes from this and it would be nice to have
+* Full blown one-way data binding
+* XAML parsing improvements (it's kinda rough right now)
 
 ### Future Improvements
 
