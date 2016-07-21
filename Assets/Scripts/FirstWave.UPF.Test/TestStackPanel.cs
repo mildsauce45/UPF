@@ -9,15 +9,26 @@ using UnityEngine.SceneManagement;
 
 public class TestStackPanel : MonoBehaviour
 {
-    void Start()
-    {
-        var frame = FindObjectOfType<Frame>();
-        if (frame == null)
-        {
-            Debug.Log("Need a frame to properly test");
-            return;
-        }
-        
-		frame.LoadPage("UPF/Combat", new TestViewViewModel());
-    }
+	private TestViewViewModel viewModel;
+
+	void Start()
+	{
+		var frame = FindObjectOfType<Frame>();
+		if (frame == null)
+		{
+			Debug.Log("Need a frame to properly test");
+			return;
+		}
+
+		viewModel = new TestViewViewModel();
+
+		frame.LoadPage("UPF/Combat", viewModel);
+	}
+
+	void OnGUI()
+	{
+		if (GUI.Button(new Rect(0, 0, 50, 30), "Inc"))
+			viewModel.Party[0].HP = (int.Parse(viewModel.Party[0].HP) + 1).ToString();
+			//viewModel.Message = "Hello World";
+	}
 }

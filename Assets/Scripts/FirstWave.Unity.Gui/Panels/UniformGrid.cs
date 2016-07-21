@@ -25,6 +25,10 @@ namespace FirstWave.Unity.Gui.Panels
             if (Location.HasValue)
                 return;
 
+			// Wait for the next measure pass
+			if (!Size.HasValue)
+				return;
+
             var x = GetStartingXCoordinate(r);
             var y = GetStartingYCoordinate(r);
 

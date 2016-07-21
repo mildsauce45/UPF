@@ -53,9 +53,28 @@ namespace FirstWave.UPF.Test
 		}
 	}
 
-	public class PartyMember
+	public class PartyMember : INotifyPropertyChanged
 	{
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private string hp;
+
 		public string Name { get; set; }
-		public string HP { get; set; }
+
+		public string HP
+		{
+			get { return hp; }
+			set
+			{
+				hp = value;
+				SafeRaisePropertyChanged("HP");
+			}
+		}
+
+		private void SafeRaisePropertyChanged(string propName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propName));
+		}
 	}
 }

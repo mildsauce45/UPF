@@ -16,7 +16,13 @@ namespace FirstWave.Unity.Gui.Controls
             DependencyProperty.Register("ItemTemplate", typeof(Template), typeof(ItemsControl));
 
         public static readonly DependencyProperty ItemsPanelTemplateProperty =
-            DependencyProperty.Register("ItemsPanelTemplate", typeof(Template), typeof(ItemsControl));
+            DependencyProperty.Register("ItemsPanelTemplate", typeof(Template), typeof(ItemsControl), new PropertyMetadata(null, OnItemsPanelTemplateChanged));
+
+		private static void OnItemsPanelTemplateChanged(Control c, object oldValue, object newValue)
+		{
+			var ic = c as ItemsControl;
+			ic.InvalidateLayout(ic);
+		}
 
         public IEnumerable ItemsSource
         {
@@ -50,6 +56,8 @@ namespace FirstWave.Unity.Gui.Controls
             // Clear out any existing children and pseudo-invalidate the panel
             generatedPanel = ItemsPanelTemplate == null ? new StackPanel() : ItemsPanelTemplate.GenerateItem(DataContext) as Panel;
 
+			generatedPanel.Parent = this;
+
             if (ItemsSource == null || ItemsSource.OfType<object>().Count() == 0)
             {
                 // If there are no items, then go ahead and return zero
@@ -82,6 +90,13 @@ namespace FirstWave.Unity.Gui.Controls
             generatedPanel.Draw();
         }
 
-        #endregion
-    }
+		internal override void InvalidateLayout(Control source)
+		{
+			generatedPanel = null;
+
+			base.InvalidateLayout(source);
+		}
+
+		#endregion
+	}
 }

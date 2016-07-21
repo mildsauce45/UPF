@@ -232,7 +232,7 @@ namespace FirstWave.Unity.Gui
 			if (this != source)
 				return;
 
-			// Now let's invalidate the entire leaf of this tree so we can properly recalculate/redraw
+			// Now let's invalidate the entire branch of this tree so we can properly recalculate/redraw
 			var ctrl = Parent;
 			while (ctrl != null)
 			{

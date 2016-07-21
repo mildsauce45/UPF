@@ -15,6 +15,11 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 		// Unused right now, but I see an eventual need for it
 		public string ElementName { get; private set; }
 
+		public BindingMarkupExtension()
+		{
+			Mode = BindingMode.OneWay;
+		}
+
 		public override void Load(Control c, string[] parms)
 		{
 			if (parms.Length == 0)
