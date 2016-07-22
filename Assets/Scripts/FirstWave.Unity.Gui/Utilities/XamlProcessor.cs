@@ -157,10 +157,10 @@ namespace FirstWave.Unity.Gui.Utilities
 					var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
 					if (tc != null)
 						value = tc.ConvertTo(value);
+					else
+						// This is probably just converting between primitive types (or we're missing a type converter)
+						value = Convert.ChangeType(value, pi.PropertyType);
 				}
-				else if (pi.PropertyType != STRING_TYPE)
-					// This is probably just converting between primitive types (or we're missing a type converter)
-					value = Convert.ChangeType(value, pi.PropertyType);
 			}
 
 			if (value is Binding)
