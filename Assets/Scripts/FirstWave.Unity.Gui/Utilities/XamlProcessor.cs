@@ -16,9 +16,9 @@ namespace FirstWave.Unity.Gui.Utilities
 	{
 		private static IDictionary<Assembly, Type[]> loadedTypes;
 		private static IDictionary<Type, IList<TypeConverter>> typeConverters;
-        private static IDictionary<string, Type> markupExtensions;
+		private static IDictionary<string, Type> markupExtensions;
 
-        internal static IDictionary<string, object> resources;
+		internal static IDictionary<string, object> resources;
 
 		private static readonly Type STRING_TYPE = typeof(string);
 
@@ -30,14 +30,14 @@ namespace FirstWave.Unity.Gui.Utilities
 			loadedTypes.Add(currentAssembly, currentAssembly.GetTypes());
 
 			LoadTypeConverters(currentAssembly);
-            LoadMarkupExtensions(currentAssembly);
+			LoadMarkupExtensions(currentAssembly);
 		}
 
 		#region Xaml Parsing Methods
 
 		public static void ParseXaml(IList<Panel> panels, string view, object viewModel)
 		{
-            resources = new Dictionary<string, object>();
+			resources = new Dictionary<string, object>();
 
 			var viewText = Resources.Load(view) as TextAsset;
 
@@ -55,15 +55,15 @@ namespace FirstWave.Unity.Gui.Utilities
 			// However everything underneath can continue to be a panel or a control
 			foreach (var panelXml in panelNodes)
 			{
-                if (panelXml.LocalName == "Resources")
-                    LoadResources(panelXml);
-                else
-                {
-                    var panelType = loadedTypes[currentAssembly].FirstOrDefault(pt => pt.Name == panelXml.LocalName);
-                    if (panelType != null)
-                    {
-                        var panel = Activator.CreateInstance(panelType) as Panel;
-                        panels.Add(panel);
+				if (panelXml.LocalName == "Resources")
+					LoadResources(panelXml);
+				else
+				{
+					var panelType = loadedTypes[currentAssembly].FirstOrDefault(pt => pt.Name == panelXml.LocalName);
+					if (panelType != null)
+					{
+						var panel = Activator.CreateInstance(panelType) as Panel;
+						panels.Add(panel);
 
 						LoadAttributes(panel, panelXml, viewModel);
 
@@ -71,28 +71,28 @@ namespace FirstWave.Unity.Gui.Utilities
 						if (panel.DataContext == null)
 							panel.DataContext = viewModel;
 
-						LoadPanel(panel, panelXml, viewModel);                        
-                    }
-                    else
-                        Debug.LogError("Could not locate panel class for type: " + panelXml.LocalName);
-                }
+						LoadPanel(panel, panelXml, viewModel);
+					}
+					else
+						Debug.LogError("Could not locate panel class for type: " + panelXml.LocalName);
+				}
 			}
 		}
 
-        private static void LoadResources(XmlNode resourceNode)
-        {
-            foreach (var rn in resourceNode.ChildNodes.OfType<XmlNode>())
-            {
-                var itemKey = rn.Attributes.GetNamedItem("Key");
+		private static void LoadResources(XmlNode resourceNode)
+		{
+			foreach (var rn in resourceNode.ChildNodes.OfType<XmlNode>())
+			{
+				var itemKey = rn.Attributes.GetNamedItem("Key");
 
-                // Not going to support keyless styles and templates for now
-                if (itemKey == null)
-                    continue;
+				// Not going to support keyless styles and templates for now
+				if (itemKey == null)
+					continue;
 
-                if (rn.LocalName == "Template")
-                    resources.Add(itemKey.Value, new Template(rn));
-            }
-        }
+				if (rn.LocalName == "Template")
+					resources.Add(itemKey.Value, new Template(rn));
+			}
+		}
 
 		private static void LoadPanel(Panel panel, XmlNode panelXml, object viewModel)
 		{
@@ -110,7 +110,7 @@ namespace FirstWave.Unity.Gui.Utilities
 					LoadAttributes(child as Control, childNode, viewModel);
 
 					if (child is Panel)
-						LoadPanel(child as Panel, childNode, viewModel);					
+						LoadPanel(child as Panel, childNode, viewModel);
 				}
 				else
 					Debug.LogError("Could not locate class for type: " + childNode.LocalName);
@@ -142,11 +142,11 @@ namespace FirstWave.Unity.Gui.Utilities
 		private static void LoadProperty(Control control, XmlAttribute attr, PropertyInfo pi, object viewModel)
 		{
 			object value = attr.Value;
-			
+
 			if (pi.PropertyType.IsEnumOrNullableEnum())
 				value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
-			
-			else 
+
+			else
 			{
 				if (((string)value).StartsWith("{"))
 					// If we start with the curly brace, then we're going to try and load a markup extension
@@ -184,48 +184,48 @@ namespace FirstWave.Unity.Gui.Utilities
 			ei.AddEventHandler(control, handler);
 		}
 
-        private static object LoadMarkupExtension(string value, Control control)
-        {
-            var data = value.Substring(1, value.Length - 2);
+		private static object LoadMarkupExtension(string value, Control control)
+		{
+			var data = value.Substring(1, value.Length - 2);
 
-            var meTypeIndex = data.IndexOf(' ');
+			var meTypeIndex = data.IndexOf(' ');
 
-            var meType = data.Substring(0, meTypeIndex);
+			var meType = data.Substring(0, meTypeIndex);
 
-            if (!markupExtensions.ContainsKey(meType))
-                return null;
+			if (!markupExtensions.ContainsKey(meType))
+				return null;
 
-            var extension = Activator.CreateInstance(markupExtensions[meType]) as MarkupExtension;
-;
-            var parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
+			var extension = Activator.CreateInstance(markupExtensions[meType]) as MarkupExtension;
 
-            extension.Load(control, parms);
+			var parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
 
-            return extension.GetValue();
-        }
+			extension.Load(control, parms);
 
-        public static Control LoadDataTemplate(XmlNode dtNode, object dataContext)
-        {
-            foreach (var childNode in dtNode.ChildNodes.OfType<XmlNode>())
-            {
-                var childType = loadedTypes[Assembly.GetExecutingAssembly()].FirstOrDefault(t => t.Name == childNode.LocalName);
-                if (childType != null)
-                {
-                    var child = Activator.CreateInstance(childType) as Control;
+			return extension.GetValue();
+		}
 
-                    if (child is Panel)
-                        LoadPanel(child as Panel, childNode, dataContext);
+		public static Control LoadDataTemplate(XmlNode dtNode, object dataContext)
+		{
+			foreach (var childNode in dtNode.ChildNodes.OfType<XmlNode>())
+			{
+				var childType = loadedTypes[Assembly.GetExecutingAssembly()].FirstOrDefault(t => t.Name == childNode.LocalName);
+				if (childType != null)
+				{
+					var child = Activator.CreateInstance(childType) as Control;
 
-                    LoadAttributes(child, childNode, dataContext);
+					if (child is Panel)
+						LoadPanel(child as Panel, childNode, dataContext);
 
-                    return child;
-                }
-                else
-                    Debug.LogError("Could not locate class for type: " + childNode.LocalName);
-            }
+					LoadAttributes(child, childNode, dataContext);
 
-            throw new ArgumentException("Template node was empty");
-        }
+					return child;
+				}
+				else
+					Debug.LogError("Could not locate class for type: " + childNode.LocalName);
+			}
+
+			throw new ArgumentException("Template node was empty");
+		}
 
 		#endregion
 
@@ -251,22 +251,22 @@ namespace FirstWave.Unity.Gui.Utilities
 			}
 		}
 
-        private static void LoadMarkupExtensions(Assembly assem)
-        {
-            if (markupExtensions == null)
-                markupExtensions = new Dictionary<string, Type>();
+		private static void LoadMarkupExtensions(Assembly assem)
+		{
+			if (markupExtensions == null)
+				markupExtensions = new Dictionary<string, Type>();
 
-            var meType = typeof(MarkupExtension);
+			var meType = typeof(MarkupExtension);
 
-            var types = loadedTypes[assem].Where(t => meType.IsAssignableFrom(t) && t != meType).ToList();
+			var types = loadedTypes[assem].Where(t => meType.IsAssignableFrom(t) && t != meType).ToList();
 
-            foreach (var t in types)
-            {
-                var me = Activator.CreateInstance(t) as MarkupExtension;
+			foreach (var t in types)
+			{
+				var me = Activator.CreateInstance(t) as MarkupExtension;
 
-                markupExtensions[me.Key] = t;
-            }
-        }
+				markupExtensions[me.Key] = t;
+			}
+		}
 
 		#endregion
 	}
