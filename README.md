@@ -15,6 +15,7 @@ of the WPF framework, most notably templating and data binding, but it solves my
 ### Next Up
 
 * XAML parsing improvements (it's kinda rough right now)
+* Load custom controls
 
 ### Future Improvements
 
