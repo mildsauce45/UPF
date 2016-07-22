@@ -14,7 +14,6 @@ of the WPF framework, most notably templating and data binding, but it solves my
 
 ### Next Up
 
-* Full blown one-way data binding
 * XAML parsing improvements (it's kinda rough right now)
 
 ### Future Improvements
