@@ -79,7 +79,7 @@ namespace FirstWave.Unity.Gui.Controls
 
         public override void Layout(Rect r)
         {
-            if (Location.HasValue)
+            if (Location.HasValue || generatedPanel == null)
                 return;
 
             generatedPanel.Layout(r);
@@ -87,7 +87,8 @@ namespace FirstWave.Unity.Gui.Controls
 
         public override void Draw()
         {
-            generatedPanel.Draw();
+			if (generatedPanel != null)
+				generatedPanel.Draw();
         }
 
 		internal override void InvalidateLayout(Control source)

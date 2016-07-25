@@ -37,7 +37,15 @@ namespace FirstWave.Unity.Gui.Controls
 
 		public override Vector2 Measure()
 		{
-			Size = new Vector2(50, 25);
+			if (!string.IsNullOrEmpty(Text))
+			{
+				var labelContent = new GUIContent(Text);
+				var labelStyle = GUIManager.Instance.GetMessageBoxStyle(GUIManager.Instance.fontProperties);
+
+				Size = labelStyle.CalcSize(labelContent);
+			}
+			else
+				Size = new Vector2(50, 25);
 
 			return Size.Value;
 		}

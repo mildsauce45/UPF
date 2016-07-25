@@ -25,11 +25,14 @@
     </Template>
   </Resources>
 
+  <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+  </StackPanel>
+
   <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>
 
   <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
 
-  <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10, 10, 10, 70">
+  <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10,10,10,70">
     <TextBlock Text="{Binding Message}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
   </Border>
 </View>

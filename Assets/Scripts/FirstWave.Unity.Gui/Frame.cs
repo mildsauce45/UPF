@@ -1,5 +1,6 @@
 ﻿using FirstWave.Messaging;
 using FirstWave.Unity.Core.Input;
+using FirstWave.Unity.Data;
 using FirstWave.Unity.Gui.Panels;
 using FirstWave.Unity.Gui.Utilities;
 using System.Collections.Generic;
@@ -15,10 +16,11 @@ namespace FirstWave.Unity.Gui
 	{
 		private IList<Panel> panels;
 		private InputManager inputManager;
+		
+		private object viewModel;		
 
-
-
-		public object XamlProcesser { get; private set; }
+		private int prevWidth;
+		private int prevHeight;
 
 		void Awake()
 		{
@@ -42,13 +44,12 @@ namespace FirstWave.Unity.Gui
 		{
 			panels.Clear();
 		}
-
-		/// <summary>
-		/// The guts of this probably need to be refactored into their own special little class
-		/// </summary>		
+		
 		public void LoadPage(string view, object viewModel)
 		{
 			Clear();
+
+			this.viewModel = viewModel;
 
 			XamlProcessor.ParseXaml(panels, view, viewModel);
 		}
@@ -79,6 +80,21 @@ namespace FirstWave.Unity.Gui
 
 		void Update()
 		{
+			if (viewModel is ViewModelBase)
+				(viewModel as ViewModelBase).Update();
+
+			CheckInput();
+		}
+
+		void OnGUI()
+		{
+			// If the window was resized and we had done a layout at least once, we need to invalidate everything
+			if ((Screen.width != prevWidth && prevWidth > 0) || (Screen.height != prevHeight && prevHeight > 0))
+			{
+				foreach (var p in panels)
+					p.InvalidateLayout(null);
+			}
+
 			foreach (var p in panels)
 				p.Measure();
 
@@ -87,18 +103,17 @@ namespace FirstWave.Unity.Gui
 			foreach (var p in panels)
 				p.Layout(screenSpace);
 
-			CheckInput();
-		}
-
-		void OnGUI()
-		{
 			foreach (var p in panels)
 				p.Draw();
+
+			prevWidth = Screen.width;
+			prevHeight = Screen.height;
 		}
 
 		void OnLevelWasLoaded()
 		{
 			panels.Clear();
+			viewModel = null;
 		}
 
 		void OnDestroy()
