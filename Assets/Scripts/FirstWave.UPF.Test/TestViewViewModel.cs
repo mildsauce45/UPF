@@ -1,13 +1,14 @@
-﻿using FirstWave.Unity.Gui.Data;
+﻿using FirstWave.Unity.Core.Utilities;
+using FirstWave.Unity.Data;
+using System;
 using System.Collections.Generic;
 
 namespace FirstWave.UPF.Test
 {
-	public class TestViewViewModel : INotifyPropertyChanged
+	public class TestViewViewModel : ViewModelBase
 	{
 		private string message;
-
-		public event PropertyChangedEventHandler PropertyChanged;
+		private TextDisplayTimer messageTimer;
 
 		public IList<Enemy> Enemies { get; private set; }
 		public IList<PartyMember> Party { get; private set; }
@@ -17,8 +18,11 @@ namespace FirstWave.UPF.Test
 			get { return message; }
 			set
 			{
-				message = value;
-				SafeRaisePropertyChanged("Message");
+				if (value != message)
+				{
+					message = value;
+					NotifyPropertyChange(() => Message);
+				}
 			}
 		}
 
@@ -35,13 +39,22 @@ namespace FirstWave.UPF.Test
 			Party.Add(new PartyMember { Name = "Drizzt", HP = "∞" });
 			Party.Add(new PartyMember { Name = "Aeris", HP = "1" });
 
-			message = "You have encountered a bunch of angels.";
+			messageTimer = new TextDisplayTimer(0.025f, "You have encountered a bunch of angels.");
+			messageTimer.Start();
 		}
 
-		private void SafeRaisePropertyChanged(string propName)
+		public override void Update()
 		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propName));
+			messageTimer.Update();
+
+			Message = messageTimer.Text;
+
+			base.Update();
+		}
+
+		private void AddHP_Clicked(object sender, EventArgs e)
+		{
+			Party[0].HP = (int.Parse(Party[0].HP) + 1).ToString();
 		}
 	}
 
@@ -53,10 +66,8 @@ namespace FirstWave.UPF.Test
 		}
 	}
 
-	public class PartyMember : INotifyPropertyChanged
+	public class PartyMember : NotifyableObject
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		private string hp;
 
 		public string Name { get; set; }
@@ -67,14 +78,8 @@ namespace FirstWave.UPF.Test
 			set
 			{
 				hp = value;
-				SafeRaisePropertyChanged("HP");
+				NotifyPropertyChange(() => HP);
 			}
-		}
-
-		private void SafeRaisePropertyChanged(string propName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propName));
-		}
+		}		
 	}
 }

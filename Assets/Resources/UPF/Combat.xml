@@ -26,6 +26,7 @@
   </Resources>
 
   <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+    <Button Text="Add HP (Test Button)" OnClick="AddHP_Clicked"/>
   </StackPanel>
 
   <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>
