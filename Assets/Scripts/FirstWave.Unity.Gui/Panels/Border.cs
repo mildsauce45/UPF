@@ -47,8 +47,8 @@ namespace FirstWave.Unity.Gui.Panels
             borderSize = new Vector2(HorizontalAlignment == Enums.HorizontalAlignment.Stretch ? r.width : Size.Value.x,
                                      VerticalAlignment == Enums.VerticalAlignment.Stretch ? r.height : Size.Value.y);
 
-            float sizeX = borderSize.x - (2 * GetTextureWidth());
-            float sizeY = borderSize.y - (2 * GetTextureHeight());
+            float sizeX = borderSize.x - (2 * GetTextureWidth()) - Padding.Left - Padding.Right;
+            float sizeY = borderSize.y - (2 * GetTextureHeight()) - Padding.Top - Padding.Bottom;
 
             foreach (var child in Children)
                 child.Layout(new Rect(x + GetTextureWidth() + Padding.Left, y + GetTextureHeight() + Padding.Top, sizeX, sizeY));

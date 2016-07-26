@@ -101,7 +101,7 @@ namespace FirstWave.Unity.Gui.Panels
                 {
                     var childSize = child.Size ?? Vector2.zero;
 
-                    child.Layout(new Rect(x, y, childSize.y, Size.Value.y));
+                    child.Layout(new Rect(x, y, childSize.x, Size.Value.y));
 
                     x += childSize.x;
                 }
