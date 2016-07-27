@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\BindingMarkupExtension.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\MarkupExtension.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\MarkupExtensions\ResourceMarkupExtension.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Panels\OverlayPanel.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Template.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestSecondGUI.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestStackPanel.cs" />
