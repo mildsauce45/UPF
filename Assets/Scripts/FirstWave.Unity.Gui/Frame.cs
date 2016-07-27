@@ -14,7 +14,7 @@ namespace FirstWave.Unity.Gui
 	/// </summary>
 	public class Frame : MonoBehaviour
 	{
-		private IList<Panel> panels;
+		private IList<Control> controls;
 		private InputManager inputManager;
 		
 		private object viewModel;		
@@ -24,7 +24,7 @@ namespace FirstWave.Unity.Gui
 
 		void Awake()
 		{
-			panels = new List<Panel>();
+            controls = new List<Control>();
 
 			inputManager = FindObjectOfType<InputManager>();
 
@@ -35,14 +35,14 @@ namespace FirstWave.Unity.Gui
 			DontDestroyOnLoad(gameObject);
 		}
 
-		public void AddPanel(Panel panel)
+		public void AddControl(Control control)
 		{
-			panels.Add(panel);
+			controls.Add(control);
 		}
 
 		public void Clear()
 		{
-			panels.Clear();
+            controls.Clear();
 		}
 		
 		public void LoadPage(string view, object viewModel)
@@ -51,14 +51,14 @@ namespace FirstWave.Unity.Gui
 
 			this.viewModel = viewModel;
 
-			XamlProcessor.ParseXaml(panels, view, viewModel);
+			XamlProcessor.ParseXaml(controls, view, viewModel);
 		}
 
 		private void CheckInput()
 		{
 			// We want to enumerate fully here because some of the key presses below can modify the structure
 			// of the visual tree and we don't want there to be exceptions
-			var castControls = panels.OfType<Control>().ToList();
+			var castControls = controls.ToList();
 
 			// We're going to tunnel through each control in the frame and inform them of any key events
 			// There are three events we're concerned with, KeyDown, KeyPressed, KeyReleased
@@ -91,20 +91,20 @@ namespace FirstWave.Unity.Gui
 			// If the window was resized and we had done a layout at least once, we need to invalidate everything
 			if ((Screen.width != prevWidth && prevWidth > 0) || (Screen.height != prevHeight && prevHeight > 0))
 			{
-				foreach (var p in panels)
-					p.InvalidateLayout(null);
+				foreach (var c in controls)
+					c.InvalidateLayout(null);
 			}
 
-			foreach (var p in panels)
-				p.Measure();
+			foreach (var c in controls)
+				c.Measure();
 
 			var screenSpace = new Rect(0, 0, Screen.width, Screen.height);
 
-			foreach (var p in panels)
-				p.Layout(screenSpace);
+			foreach (var c in controls)
+				c.Layout(screenSpace);
 
-			foreach (var p in panels)
-				p.Draw();
+			foreach (var c in controls)
+				c.Draw();
 
 			prevWidth = Screen.width;
 			prevHeight = Screen.height;
@@ -112,7 +112,7 @@ namespace FirstWave.Unity.Gui
 
 		void OnLevelWasLoaded()
 		{
-			panels.Clear();
+            controls.Clear();
 			viewModel = null;
 		}
 

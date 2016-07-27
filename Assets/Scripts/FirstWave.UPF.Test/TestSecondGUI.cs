@@ -16,7 +16,7 @@ public class TestSecondGUI : MonoBehaviour {
 
         sp.AddChild(new TextBlock("This is the second scene."));
 
-        frame.AddPanel(sp);
+        frame.AddControl(sp);
 	}
 	
 	// Update is called once per frame

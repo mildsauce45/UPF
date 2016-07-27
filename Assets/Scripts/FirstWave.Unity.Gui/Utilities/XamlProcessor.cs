@@ -35,7 +35,7 @@ namespace FirstWave.Unity.Gui.Utilities
 
 		#region Xaml Parsing Methods
 
-		public static void ParseXaml(IList<Panel> panels, string view, object viewModel)
+		public static void ParseXaml(IList<Control> controls, string view, object viewModel)
 		{
 			resources = new Dictionary<string, object>();
 
@@ -62,16 +62,17 @@ namespace FirstWave.Unity.Gui.Utilities
 					var panelType = loadedTypes[currentAssembly].FirstOrDefault(pt => pt.Name == panelXml.LocalName);
 					if (panelType != null)
 					{
-						var panel = Activator.CreateInstance(panelType) as Panel;
-						panels.Add(panel);
+						var control = Activator.CreateInstance(panelType) as Control;
+						controls.Add(control);
 
-						LoadAttributes(panel, panelXml, viewModel);
+						LoadAttributes(control, panelXml, viewModel);
 
 						// The top-most panel/controls are going to get their DataContexts set to the passed in view model
-						if (panel.DataContext == null)
-							panel.DataContext = viewModel;
+						if (control.DataContext == null)
+                            control.DataContext = viewModel;
 
-						LoadPanel(panel, panelXml, viewModel);
+                        if (control is Panel)
+						    LoadPanel(control as Panel, panelXml, viewModel);
 					}
 					else
 						Debug.LogError("Could not locate panel class for type: " + panelXml.LocalName);
@@ -145,7 +146,6 @@ namespace FirstWave.Unity.Gui.Utilities
 
 			if (pi.PropertyType.IsEnumOrNullableEnum())
 				value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
-
 			else
 			{
 				if (((string)value).StartsWith("{"))
@@ -155,11 +155,19 @@ namespace FirstWave.Unity.Gui.Utilities
 				{
 					// String values don't need to be converted
 					var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
-					if (tc != null)
-						value = tc.ConvertTo(value);
-					else
-						// This is probably just converting between primitive types (or we're missing a type converter)
-						value = Convert.ChangeType(value, pi.PropertyType);
+                    if (tc != null)
+                        value = tc.ConvertTo(value);
+                    else
+                    {
+                        // This is probably just converting between primitive types (or we're missing a type converter)
+
+                        // We need to handle nullable types as well
+                        var t = pi.PropertyType;
+                        t = Nullable.GetUnderlyingType(t) ?? t;
+
+                        //Coalesce to set the safe value using the default of t or the safe type.
+                        value = value == null ? t.Default() : Convert.ChangeType(value, t);
+                    }
 				}
 			}
 
