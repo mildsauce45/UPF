@@ -1,4 +1,5 @@
 ﻿using FirstWave.Unity.Gui;
+using FirstWave.Unity.Gui.Bridge;
 using FirstWave.Unity.Gui.Primitives;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,33 @@ namespace FirstWave.Unity.Gui.Controls
 		#region Dependency Properties
 
 		public static readonly DependencyProperty TextProperty =
-			DependencyProperty.Register("Text", typeof(string), typeof(Button), new PropertyMetadata(null));		
+			DependencyProperty.Register("Text", typeof(string), typeof(Button), new PropertyMetadata(null));
+
+		public static readonly DependencyProperty BackgroundProperty =
+			DependencyProperty.Register("Background", typeof(string), typeof(Button), new PropertyMetadata(null, OnBackgroundChanged));
+
+		public static readonly DependencyProperty ImageProperty =
+			DependencyProperty.Register("Image", typeof(string), typeof(Button), new PropertyMetadata(null, OnImageChanged));
+
+		private static void OnBackgroundChanged(Control c, object oldValue, object newValue)
+		{
+			var b = c as Button;
+
+			if (newValue == null)
+				b.background = null;
+			else
+				b.background = new TextureResourceLoader().LoadResource((string)newValue);
+		}
+
+		private static void OnImageChanged(Control c, object oldValue, object newValue)
+		{
+			var b = c as Button;
+
+			if (newValue == null)
+				b.texture = null;
+			else
+				b.texture = new TextureResourceLoader().LoadResource((string)newValue);
+		}
 
 		public string Text
 		{
@@ -21,7 +48,25 @@ namespace FirstWave.Unity.Gui.Controls
 			set { SetValue(TextProperty, value); }
 		}
 
+		public string Background
+		{
+			get { return (string)GetValue(BackgroundProperty); }
+			set { SetValue(BackgroundProperty, value); }
+		}
+
+		public string Image
+		{
+			get { return (string)GetValue(ImageProperty); }
+			set { SetValue(ImageProperty, value); }
+		}
+
 		#endregion
+
+		private Texture background;
+		private Texture texture;
+
+		private GUIContent content;
+		private GUIStyle style;
 
 		#region Events
 
@@ -37,15 +82,13 @@ namespace FirstWave.Unity.Gui.Controls
 
 		public override Vector2 Measure()
 		{
-			if (!string.IsNullOrEmpty(Text))
-			{
-				var labelContent = new GUIContent(Text);
-				var labelStyle = GUIManager.Instance.GetMessageBoxStyle(GUIManager.Instance.fontProperties);
+			content = new GUIContent(Text, texture);
 
-				Size = labelStyle.CalcSize(labelContent);
-			}
-			else
-				Size = new Vector2(50, 25);
+			var bgContent = new GUIContent(background);
+
+			style = GUIManager.Instance.GetButtonStyle(background as Texture2D);
+
+			Size = style.CalcSize(bgContent);
 
 			return Size.Value;
 		}
@@ -60,7 +103,7 @@ namespace FirstWave.Unity.Gui.Controls
 
 		public override void Draw()
 		{
-			if (GUI.Button(new Rect(Location ?? Vector2.zero, Size ?? Vector2.zero), Text))
+			if (GUI.Button(new Rect(Location ?? Vector2.zero, Size ?? Vector2.zero), content, style))
 			{
 				if (OnClick != null)
 					OnClick(this, EventArgs.Empty);

@@ -29,6 +29,8 @@
     <Button Text="Add HP (Test Button)" OnClick="AddHP_Clicked"/>
   </StackPanel>
 
+  <Button Background="Images/crate" Image="Icons/fireball" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
   <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>
 
   <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
