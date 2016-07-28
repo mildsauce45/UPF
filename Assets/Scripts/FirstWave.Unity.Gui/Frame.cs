@@ -51,7 +51,11 @@ namespace FirstWave.Unity.Gui
 
 			this.viewModel = viewModel;
 
-			XamlProcessor.ParseXaml(controls, view, viewModel);
+			// Get the controls in one fell swoop so we're not in the process of parsing while updates are going on
+			var parsedControls = XamlProcessor.ParseXaml(view, viewModel);
+
+			foreach (var c in parsedControls)
+				controls.Add(c);
 		}
 
 		private void CheckInput()

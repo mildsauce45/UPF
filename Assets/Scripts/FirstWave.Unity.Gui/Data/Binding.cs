@@ -5,6 +5,9 @@
 		private object source;
 		private object target;
 
+		// Flag useful for stopping infinite recursion when resolving the original source of a new DataContext binding
+		private bool resolvingSource;
+
 		// Used in the case of a one time binding
 		private object cachedValue;
 		private bool calculatedValue;
@@ -18,6 +21,9 @@
 		{
 			get
 			{
+				if (resolvingSource)
+					return null;
+
 				// In the future this will get to choose between DataContext and ElementName
 				if (source == null)
 					source = GetSource();
@@ -66,6 +72,8 @@
 		{
 			if (target is Control)
 			{
+				resolvingSource = true;
+
 				var c = target as Control;
 
 				var dc = c.DataContext;
@@ -79,6 +87,8 @@
 				// Now let's wire up a listener for changes to this
 				if (dc is INotifyPropertyChanged)
 					(dc as INotifyPropertyChanged).PropertyChanged += DataContext_PropertyChanged;
+
+				resolvingSource = false;
 
 				return dc;
 			}
@@ -95,7 +105,7 @@
 				targetCtrl.InvalidateLayout(targetCtrl);
 			else
 			{
-				// Only check the first part of the path for a match right now (this is probably gonna be the most common case anyway
+				// Only check the first part of the path for a match right now (this is probably gonna be the most common case anyway)
 				var pathStart = Path.Split(new char[] { '.' })[0];
 
 				if (pathStart == e.PropertyName)

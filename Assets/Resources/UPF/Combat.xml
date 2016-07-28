@@ -33,10 +33,12 @@
 
   <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
 
-  <OverlayPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-    <Image Source="Images/TestStretch" Fill="Stretch" Width="400" Height="30"/>
-    <Image Source="Images/TestStretch" Fill="Stretch" Width="200" Height="30"/>
-  </OverlayPanel>
+  <StackPanel>
+    <OverlayPanel DataContext="{Binding InnerVM}">
+      <Image Source="Images/TestStretch" Fill="Stretch" Width="{Binding TotalWidth}" Height="30"/>
+      <Image Source="Images/TestStretch" Fill="Stretch" Width="{Binding HalfWidth}" Height="30"/>
+    </OverlayPanel>
+  </StackPanel>
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10,10,10,70">
     <TextBlock Text="{Binding Message}" VerticalAlignment="Top" HorizontalAlignment="Left"/>

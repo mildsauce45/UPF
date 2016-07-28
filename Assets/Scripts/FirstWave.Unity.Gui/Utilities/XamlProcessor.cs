@@ -35,9 +35,11 @@ namespace FirstWave.Unity.Gui.Utilities
 
 		#region Xaml Parsing Methods
 
-		public static void ParseXaml(IList<Control> controls, string view, object viewModel)
+		public static IList<Control> ParseXaml(string view, object viewModel)
 		{
 			resources = new Dictionary<string, object>();
+
+			var controls = new List<Control>();
 
 			var viewText = Resources.Load(view) as TextAsset;
 
@@ -78,6 +80,8 @@ namespace FirstWave.Unity.Gui.Utilities
 						Debug.LogError("Could not locate panel class for type: " + panelXml.LocalName);
 				}
 			}
+
+			return controls;
 		}
 
 		private static void LoadResources(XmlNode resourceNode)

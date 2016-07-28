@@ -26,6 +26,8 @@ namespace FirstWave.UPF.Test
 			}
 		}
 
+		public InnerVM InnerVM { get; private set; }
+
 		public TestViewViewModel()
 		{
 			Enemies = new List<Enemy>();
@@ -41,6 +43,8 @@ namespace FirstWave.UPF.Test
 
 			messageTimer = new TextDisplayTimer(0.025f, "You have encountered a bunch of angels.");
 			messageTimer.Start();
+
+			InnerVM = new InnerVM();
 		}
 
 		public override void Update()
@@ -55,6 +59,18 @@ namespace FirstWave.UPF.Test
 		private void AddHP_Clicked(object sender, EventArgs e)
 		{
 			Party[0].HP = (int.Parse(Party[0].HP) + 1).ToString();
+		}
+	}
+
+	public class InnerVM
+	{
+		public float TotalWidth { get; set; }
+		public float HalfWidth { get; set; }
+
+		public InnerVM()
+		{
+			TotalWidth = 400;
+			HalfWidth = 200;
 		}
 	}
 
