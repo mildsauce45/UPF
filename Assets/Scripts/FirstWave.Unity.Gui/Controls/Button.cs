@@ -105,7 +105,7 @@ namespace FirstWave.Unity.Gui.Controls
 
 			style = GUIManager.Instance.GetButtonStyle(background as Texture2D);
 
-			Size = style.CalcSize(bgContent);
+			Size = style.CalcSize(background != null ? bgContent : content);
 
 			return Size.Value;
 		}

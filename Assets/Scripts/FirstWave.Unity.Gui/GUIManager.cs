@@ -32,11 +32,17 @@ namespace FirstWave.Unity.Gui
 
 		public GUIStyle GetButtonStyle(Texture2D background)
 		{
-			var style = new GUIStyle();
+            GUIStyle style;
+            if (background == null)
+                style = GUI.skin.button;
+            else
+            {
+                style = new GUIStyle();
 
-			style.normal.background = background;
-			style.hover.background = background;
-			style.alignment = TextAnchor.MiddleCenter;
+                style.normal.background = background;
+                style.hover.background = background;
+                style.alignment = TextAnchor.MiddleCenter;
+            }
 
 			return style;
 		}
