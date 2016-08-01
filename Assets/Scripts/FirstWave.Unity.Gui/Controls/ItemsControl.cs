@@ -83,6 +83,8 @@ namespace FirstWave.Unity.Gui.Controls
                 return;
 
             generatedPanel.Layout(r);
+
+            Location = generatedPanel.Location;
         }
 
         public override void Draw()

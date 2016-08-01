@@ -12,7 +12,6 @@
 		private object cachedValue;
 		private bool calculatedValue;
 
-		public object DataContext { get; set; }
 		public string Path { get; set; }
 		public string ElementName { get; set; }
 		public BindingMode Mode { get; set; }
@@ -64,7 +63,6 @@
 				cachedValue = localSrc;
 			}
 
-			// Shouldn't ever get here
 			return localSrc;
 		}
 
@@ -76,13 +74,7 @@
 
 				var c = target as Control;
 
-				var dc = c.DataContext;
-				while (dc == null && c != null)
-				{
-					c = c.Parent;
-					if (c != null)
-						dc = c.DataContext;
-				}
+                var dc = string.IsNullOrEmpty(ElementName) ? ResolveDataContext(c) : ResolveElementName(c);
 
 				// Now let's wire up a listener for changes to this
 				if (dc is INotifyPropertyChanged)
@@ -95,6 +87,29 @@
 
 			return null;
 		}
+
+        private object ResolveElementName(Control c)
+        {
+            // Unlike WPF proper, I'm only supporting names of parent elements.
+            // This has been, by far, the most common case in my years of wpf and silverlight dev. 
+            while (c != null && c.Name != ElementName)
+                c = c.Parent;
+
+            return c;
+        }
+
+        private object ResolveDataContext(Control c)
+        {
+            var dc = c.DataContext;
+            while (dc == null && c != null)
+            {
+                c = c.Parent;
+                if (c != null)
+                    dc = c.DataContext;
+            }
+
+            return dc;
+        }
 
 		private void DataContext_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{

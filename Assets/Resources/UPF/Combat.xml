@@ -25,7 +25,11 @@
     </Template>
 
     <Template Key="ButtonTestTemplate">
-      <Button Background="Images/crate" Image="Icons/fireball" Command="{Binding FakeCommand, ElementName=TopLevelElement}" CommandParameter="{Binding}"/>
+      <Button Background="Images/crate" Image="Icons/fireball" Command="{Binding DataContext.FakeCommand, ElementName=TopLevelElement}" CommandParameter="{Binding}"/>
+    </Template>
+
+    <Template Key="AbilityPanelTemplate">
+      <UniformGrid Orientation="Vertical"/>
     </Template>
   </Resources>
 
@@ -33,17 +37,12 @@
     <Button Text="Add HP (Test Button)" OnClick="AddHP_Clicked"/>
   </StackPanel>
 
-  <Button Background="Images/crate" Image="Icons/fireball" VerticalAlignment="Center" HorizontalAlignment="Left" Command="{Binding FooCommand}" CommandParameter="{Binding}"/>
-
   <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>
 
   <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
 
-  <StackPanel>
-    <OverlayPanel DataContext="{Binding InnerVM}">
-      <Image Source="Images/TestStretch" Fill="Stretch" Width="{Binding TotalWidth}" Height="30"/>
-      <Image Source="Images/TestStretch" Fill="Stretch" Width="{Binding HalfWidth}" Height="30"/>
-    </OverlayPanel>
+  <StackPanel Name="TopLevelElement" HorizontalAlignment="Left" VerticalAlignment="Center">
+    <ItemsControl ItemTemplate="{Resource ButtonTestTemplate}" ItemsSource="{Binding Abilities}" ItemsPanelTemplate="{Resource AbilityPanelTemplate}"/>
   </StackPanel>
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10,10,10,70">

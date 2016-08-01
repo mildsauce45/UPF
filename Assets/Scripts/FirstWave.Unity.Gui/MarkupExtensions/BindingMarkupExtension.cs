@@ -11,8 +11,6 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 
         public string Path { get; private set; }
         public BindingMode Mode { get; private set; }
-
-        // Unused right now, but I see an eventual need for it
         public string ElementName { get; private set; }
 
         public BindingMarkupExtension()
@@ -35,17 +33,19 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 					Path = parts[0];
 				else if (parts.Length == 2)
 				{
-					if (parts[0] == "Path")
-						Path = parts[1];
-					else if (parts[0] == "Mode")
-						Mode = (BindingMode)Enum.Parse(typeof(BindingMode), parts[1]);
+                    if (parts[0] == "Path")
+                        Path = parts[1];
+                    else if (parts[0] == "Mode")
+                        Mode = (BindingMode)Enum.Parse(typeof(BindingMode), parts[1]);
+                    else if (parts[0] == "ElementName")
+                        ElementName = parts[1];
 				}
 			}
 		}
 
 		public override object GetValue()
 		{
-			return new Binding(target) { Path = Path, Mode = Mode };
+			return new Binding(target) { Path = Path, Mode = Mode, ElementName = ElementName };
 		}
 	}
 }

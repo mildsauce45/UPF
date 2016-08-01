@@ -14,10 +14,16 @@ namespace FirstWave.UPF.Test
 
 		public IList<Enemy> Enemies { get; private set; }
 		public IList<PartyMember> Party { get; private set; }
+        public IList<Ability> Abilities { get; private set; }
 
         public ICommand FooCommand
         {
             get { return new ExecutableCommand(PrintContext); }
+        }
+
+        public ICommand FakeCommand
+        {
+            get { return new ExecutableCommand(PrintAbility); }
         }
 
 		public string Message
@@ -48,6 +54,11 @@ namespace FirstWave.UPF.Test
 			Party.Add(new PartyMember { Name = "Drizzt", HP = "∞" });
 			Party.Add(new PartyMember { Name = "Aeris", HP = "1" });
 
+            Abilities = new List<Ability>();
+            Abilities.Add(new Ability { Name = "Fireball" });
+            Abilities.Add(new Ability { Name = "Green Fireball" });
+            Abilities.Add(new Ability { Name = "Kill" });
+
 			messageTimer = new TextDisplayTimer(0.025f, "You have encountered a bunch of angels.");
 			messageTimer.Start();
 
@@ -71,6 +82,12 @@ namespace FirstWave.UPF.Test
         private void PrintContext(object context)
         {
             Debug.Log(context);
+        }
+
+        private void PrintAbility(object ability)
+        {
+            var a = ability as Ability;
+            Debug.Log(a.Name);
         }
 	}
 
@@ -110,4 +127,9 @@ namespace FirstWave.UPF.Test
 			}
 		}		
 	}
+
+    public class Ability
+    {
+        public string Name { get; set; }
+    }
 }
