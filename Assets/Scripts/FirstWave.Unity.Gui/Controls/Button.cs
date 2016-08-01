@@ -1,15 +1,10 @@
-﻿using FirstWave.Unity.Gui;
-using FirstWave.Unity.Gui.Bridge;
-using FirstWave.Unity.Gui.Primitives;
+﻿using FirstWave.Unity.Gui.Bridge;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace FirstWave.Unity.Gui.Controls
 {
-	public class Button : Control
+    public class Button : Control
 	{
 		#region Dependency Properties
 
@@ -21,6 +16,12 @@ namespace FirstWave.Unity.Gui.Controls
 
 		public static readonly DependencyProperty ImageProperty =
 			DependencyProperty.Register("Image", typeof(string), typeof(Button), new PropertyMetadata(null, OnImageChanged));
+
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.Register("Command", typeof(ICommand), typeof(Button), new PropertyMetadata(null, false));
+
+        public static readonly DependencyProperty CommandParameterProperty =
+            DependencyProperty.Register("CommandParameter", typeof(object), typeof(Button), new PropertyMetadata(null, false));
 
 		private static void OnBackgroundChanged(Control c, object oldValue, object newValue)
 		{
@@ -60,17 +61,33 @@ namespace FirstWave.Unity.Gui.Controls
 			set { SetValue(ImageProperty, value); }
 		}
 
-		#endregion
+        public ICommand Command
+        {
+            get { return (ICommand)GetValue(CommandProperty); }
+            set { SetValue(CommandProperty, value); }
+        }
 
-		private Texture background;
+        public object CommandParameter
+        {
+            get { return GetValue(CommandParameterProperty); }
+            set { SetValue(CommandParameterProperty, value); }
+        }
+
+        #endregion
+
+        #region Private Variables
+
+        private Texture background;
 		private Texture texture;
 
 		private GUIContent content;
 		private GUIStyle style;
 
-		#region Events
+        #endregion
 
-		public event EventHandler OnClick;
+        #region Events
+
+        public event EventHandler OnClick;
 
 		#endregion
 
@@ -107,6 +124,10 @@ namespace FirstWave.Unity.Gui.Controls
 			{
 				if (OnClick != null)
 					OnClick(this, EventArgs.Empty);
+
+                var command = Command;
+                if (command != null && command.CanExecute(CommandParameter))
+                    command.Execute(CommandParameter);
 			}
 		}
 

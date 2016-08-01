@@ -23,13 +23,17 @@
     <Template Key="PartyMemberPanelTemplate">
       <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10"/>
     </Template>
+
+    <Template Key="ButtonTestTemplate">
+      <Button Background="Images/crate" Image="Icons/fireball" Command="{Binding FakeCommand, ElementName=TopLevelElement}" CommandParameter="{Binding}"/>
+    </Template>
   </Resources>
 
   <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
     <Button Text="Add HP (Test Button)" OnClick="AddHP_Clicked"/>
   </StackPanel>
 
-  <Button Background="Images/crate" Image="Icons/fireball" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+  <Button Background="Images/crate" Image="Icons/fireball" VerticalAlignment="Center" HorizontalAlignment="Left" Command="{Binding FooCommand}" CommandParameter="{Binding}"/>
 
   <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>
 

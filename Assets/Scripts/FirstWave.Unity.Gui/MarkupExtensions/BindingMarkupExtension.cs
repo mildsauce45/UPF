@@ -3,29 +3,29 @@ using System;
 
 namespace FirstWave.Unity.Gui.MarkupExtensions
 {
-	public class BindingMarkupExtension : MarkupExtension
-	{
-		private Control target;
+    public class BindingMarkupExtension : MarkupExtension
+    {
+        private Control target;
 
-		public override string Key { get { return "Binding"; } }
+        public override string Key { get { return "Binding"; } }
 
-		public string Path { get; private set; }
-		public BindingMode Mode { get; private set; }
+        public string Path { get; private set; }
+        public BindingMode Mode { get; private set; }
 
-		// Unused right now, but I see an eventual need for it
-		public string ElementName { get; private set; }
+        // Unused right now, but I see an eventual need for it
+        public string ElementName { get; private set; }
 
-		public BindingMarkupExtension()
-		{
-			Mode = BindingMode.OneWay;
-		}
+        public BindingMarkupExtension()
+        {
+            Mode = BindingMode.OneWay;
+        }
 
-		public override void Load(Control c, string[] parms)
-		{
-			if (parms.Length == 0)
+        public override void Load(Control c, string[] parms)
+        {
+            target = c;
+
+            if (parms == null || parms.Length == 0)
 				return;
-
-			this.target = c;
 
 			foreach (var parm in parms)
 			{

@@ -71,6 +71,8 @@
     <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Utilities\Timer.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Data\NotifyableObject.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Data\ViewModelBase.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Bridge\ExecutableCommand.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Bridge\ICommand.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Controls\ItemsControl.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\Binding.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Data\BindingMode.cs" />

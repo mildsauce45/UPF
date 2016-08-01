@@ -1,7 +1,9 @@
 ﻿using FirstWave.Unity.Core.Utilities;
 using FirstWave.Unity.Data;
+using FirstWave.Unity.Gui.Bridge;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace FirstWave.UPF.Test
 {
@@ -12,6 +14,11 @@ namespace FirstWave.UPF.Test
 
 		public IList<Enemy> Enemies { get; private set; }
 		public IList<PartyMember> Party { get; private set; }
+
+        public ICommand FooCommand
+        {
+            get { return new ExecutableCommand(PrintContext); }
+        }
 
 		public string Message
 		{
@@ -60,6 +67,11 @@ namespace FirstWave.UPF.Test
 		{
 			Party[0].HP = (int.Parse(Party[0].HP) + 1).ToString();
 		}
+
+        private void PrintContext(object context)
+        {
+            Debug.Log(context);
+        }
 	}
 
 	public class InnerVM

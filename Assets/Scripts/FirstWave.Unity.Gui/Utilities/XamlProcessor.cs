@@ -202,14 +202,18 @@ namespace FirstWave.Unity.Gui.Utilities
 
 			var meTypeIndex = data.IndexOf(' ');
 
-			var meType = data.Substring(0, meTypeIndex);
+            string meType = data;
+            if (meTypeIndex >= 0)
+			    meType = data.Substring(0, meTypeIndex);
 
 			if (!markupExtensions.ContainsKey(meType))
 				return null;
 
 			var extension = Activator.CreateInstance(markupExtensions[meType]) as MarkupExtension;
 
-			var parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
+            string[] parms = null;
+            if (meTypeIndex >= 0)
+			    parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
 
 			extension.Load(control, parms);
 
