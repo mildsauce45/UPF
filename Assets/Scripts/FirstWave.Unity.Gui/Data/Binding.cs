@@ -15,6 +15,8 @@
 		public string Path { get; set; }
 		public string ElementName { get; set; }
 		public BindingMode Mode { get; set; }
+        public IValueConverter Converter { get; set; }
+        public string ConverterParameter { get; set; }
 
 		public object Source
 		{
@@ -62,6 +64,9 @@
 				calculatedValue = true;
 				cachedValue = localSrc;
 			}
+
+            if (Converter != null)
+                localSrc = Converter.Convert(localSrc, ConverterParameter);
 
 			return localSrc;
 		}

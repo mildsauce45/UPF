@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FirstWave.Unity.Gui.Enums;
 
 namespace FirstWave.Unity.Gui.Panels
 {
@@ -20,6 +21,9 @@ namespace FirstWave.Unity.Gui.Panels
 
         public override void Draw()
         {
+            if (Visibility != Visibility.Visible)
+                return;
+
             foreach (var child in Children)
             {
                 if (child.Location.HasValue && child.Size.HasValue)

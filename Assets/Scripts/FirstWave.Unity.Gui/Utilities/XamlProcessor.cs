@@ -94,8 +94,20 @@ namespace FirstWave.Unity.Gui.Utilities
 				if (itemKey == null)
 					continue;
 
-				if (rn.LocalName == "Template")
-					resources.Add(itemKey.Value, new Template(rn));
+                if (rn.LocalName == "Template")
+                    resources.Add(itemKey.Value, new Template(rn));
+                else if (!string.IsNullOrEmpty(rn.NamespaceURI))
+                {
+                    var typeName = string.Format("{0}.{1}", rn.NamespaceURI, rn.LocalName);
+
+                    // I think we get away with this for right now, because importing UPF into your project doesn't
+                    // produce multiple dlls, you still just get the Assembly-CSharp.dll
+                    var assembly = Assembly.GetExecutingAssembly();
+
+                    var matchingType = loadedTypes[assembly].FirstOrDefault(t => t.FullName == typeName);
+                    if (matchingType != null)
+                        resources.Add(itemKey.Value, Activator.CreateInstance(matchingType));
+                }
 			}
 		}
 
@@ -105,7 +117,21 @@ namespace FirstWave.Unity.Gui.Utilities
 
 			foreach (var childNode in panelXml.ChildNodes.OfType<XmlNode>())
 			{
-				var childType = loadedTypes[currentAssembly].FirstOrDefault(t => t.Name == childNode.LocalName);
+                Type childType = null;
+
+                if (string.IsNullOrEmpty(childNode.NamespaceURI))
+                    childType = loadedTypes[currentAssembly].FirstOrDefault(t => t.Name == childNode.LocalName);
+                else
+                {
+                    var typeName = string.Format("{0}.{1}", childNode.NamespaceURI, childNode.LocalName);
+
+                    // I think we get away with this for right now, because importing UPF into your project doesn't
+                    // produce multiple dlls, you still just get the Assembly-CSharp.dll
+                    var assembly = Assembly.GetExecutingAssembly();
+
+                    childType = loadedTypes[assembly].FirstOrDefault(t => t.FullName == typeName);
+                }
+
 				if (childType != null)
 				{
 					var child = Activator.CreateInstance(childType);
@@ -148,31 +174,28 @@ namespace FirstWave.Unity.Gui.Utilities
 		{
 			object value = attr.Value;
 
-			if (pi.PropertyType.IsEnumOrNullableEnum())
-				value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
-			else
+			if (((string)value).StartsWith("{"))
+				// If we start with the curly brace, then we're going to try and load a markup extension
+				value = LoadMarkupExtension((string)value, control);
+            else if (pi.PropertyType.IsEnumOrNullableEnum())
+                value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
+            else if (pi.PropertyType != STRING_TYPE)
 			{
-				if (((string)value).StartsWith("{"))
-					// If we start with the curly brace, then we're going to try and load a markup extension
-					value = LoadMarkupExtension((string)value, control);
-				else if (pi.PropertyType != STRING_TYPE)
-				{
-					// String values don't need to be converted
-					var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
-                    if (tc != null)
-                        value = tc.ConvertTo(value);
-                    else
-                    {
-                        // This is probably just converting between primitive types (or we're missing a type converter)
+				// String values don't need to be converted
+				var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
+                if (tc != null)
+                    value = tc.ConvertTo(value);
+                else
+                {
+                    // This is probably just converting between primitive types (or we're missing a type converter)
 
-                        // We need to handle nullable types as well
-                        var t = pi.PropertyType;
-                        t = Nullable.GetUnderlyingType(t) ?? t;
+                    // We need to handle nullable types as well
+                    var t = pi.PropertyType;
+                    t = Nullable.GetUnderlyingType(t) ?? t;
 
-                        //Coalesce to set the safe value using the default of t or the safe type.
-                        value = value == null ? t.Default() : Convert.ChangeType(value, t);
-                    }
-				}
+                    //Coalesce to set the safe value using the default of t or the safe type.
+                    value = value == null ? t.Default() : Convert.ChangeType(value, t);
+                }
 			}
 
 			if (value is Binding)
@@ -217,7 +240,7 @@ namespace FirstWave.Unity.Gui.Utilities
 
 			extension.Load(control, parms);
 
-			return extension.GetValue();
+			return extension.GetValue(resources);
 		}
 
 		public static Control LoadDataTemplate(XmlNode dtNode, object dataContext)

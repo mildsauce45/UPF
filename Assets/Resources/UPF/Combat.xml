@@ -1,4 +1,7 @@
-﻿<View>
+﻿<View
+  xmlns:converters="FirstWave.UPF.Test"
+  xmlns:controls="FirstWave.UPF.Test.Controls">
+  
   <Resources>
     <Template Key="EnemyTemplate">
       <Image Source="{Binding Sprite}" Margin="5,0"/>
@@ -31,6 +34,8 @@
     <Template Key="AbilityPanelTemplate">
       <UniformGrid Orientation="Vertical"/>
     </Template>
+  
+    <converters:VisibilityConverter Key="VisibilityConverter"/>
   </Resources>
 
   <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -41,8 +46,12 @@
 
   <ItemsControl ItemTemplate="{Resource EnemyTemplate}" ItemsSource="{Binding Enemies}" ItemsPanelTemplate="{Resource EnemyPanelTemplate}"/>
 
-  <StackPanel Name="TopLevelElement" HorizontalAlignment="Left" VerticalAlignment="Center">
+  <StackPanel Name="TopLevelElement" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{Binding ShowAbilities, Converter=VisibilityConverter}">
     <ItemsControl ItemTemplate="{Resource ButtonTestTemplate}" ItemsSource="{Binding Abilities}" ItemsPanelTemplate="{Resource AbilityPanelTemplate}"/>
+  </StackPanel>
+  
+  <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+    <controls:TestControl/>
   </StackPanel>
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10,10,10,70">

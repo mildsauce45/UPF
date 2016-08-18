@@ -1,4 +1,4 @@
-﻿using FirstWave.Unity.Gui.Utilities;
+﻿using System.Collections.Generic;
 
 namespace FirstWave.Unity.Gui.MarkupExtensions
 {
@@ -22,12 +22,12 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
                 ResourceKey = parts[1];
         }
 
-        public override object GetValue()
+        public override object GetValue(IDictionary<string, object> resources)
         {
             if (string.IsNullOrEmpty(ResourceKey))
                 return null;
 
-            return XamlProcessor.resources.ContainsKey(ResourceKey) ? XamlProcessor.resources[ResourceKey] : null;
+            return resources.ContainsKey(ResourceKey) ? resources[ResourceKey] : null;
         }
     }
 }

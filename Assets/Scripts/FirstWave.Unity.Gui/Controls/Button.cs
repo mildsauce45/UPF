@@ -100,7 +100,8 @@ namespace FirstWave.Unity.Gui.Controls
 		public override Vector2 Measure()
 		{
             // One last ditch attempt at loading the texture (in case of a binding)
-            texture = new TextureResourceLoader().LoadResource(Image);
+            if (!string.IsNullOrEmpty(Image))
+                texture = new TextureResourceLoader().LoadResource(Image);
 
             content = new GUIContent(Text, texture);
 

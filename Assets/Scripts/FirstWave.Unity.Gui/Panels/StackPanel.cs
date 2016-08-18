@@ -26,6 +26,13 @@ namespace FirstWave.Unity.Gui.Panels
             if (Size.HasValue)
                 return Size.Value;
 
+            if (Visibility == Visibility.Hidden)
+            {
+                Size = Vector2.zero;
+
+                return Vector2.zero;
+            }
+
             if (Orientation == Orientation.Vertical)
                 return MeasureVertical();
 

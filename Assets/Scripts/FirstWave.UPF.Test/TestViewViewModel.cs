@@ -7,13 +7,14 @@ using UnityEngine;
 
 namespace FirstWave.UPF.Test
 {
-	public class TestViewViewModel : ViewModelBase
-	{
-		private string message;
-		private TextDisplayTimer messageTimer;
+    public class TestViewViewModel : ViewModelBase
+    {
+        private string message;
+        private bool showAbilities;
+        private TextDisplayTimer messageTimer;
 
-		public IList<Enemy> Enemies { get; private set; }
-		public IList<PartyMember> Party { get; private set; }
+        public IList<Enemy> Enemies { get; private set; }
+        public IList<PartyMember> Party { get; private set; }
         public IList<Ability> Abilities { get; private set; }
 
         public ICommand FooCommand
@@ -26,18 +27,28 @@ namespace FirstWave.UPF.Test
             get { return new ExecutableCommand(PrintAbility); }
         }
 
-		public string Message
-		{
-			get { return message; }
-			set
-			{
-				if (value != message)
-				{
-					message = value;
-					NotifyPropertyChange(() => Message);
-				}
-			}
-		}
+        public string Message
+        {
+            get { return message; }
+            set
+            {
+                if (value != message)
+                {
+                    message = value;
+                    NotifyPropertyChange(() => Message);
+                }
+            }
+        }
+
+        public bool ShowAbilities
+        {
+            get { return showAbilities; }
+            set
+            {
+                showAbilities = value;
+                NotifyPropertyChange(() => ShowAbilities);
+            }
+        }
 
 		public InnerVM InnerVM { get; private set; }
 
@@ -62,6 +73,8 @@ namespace FirstWave.UPF.Test
 			messageTimer = new TextDisplayTimer(0.025f, "You have encountered a bunch of angels.");
 			messageTimer.Start();
 
+            ShowAbilities = true;
+
 			InnerVM = new InnerVM();
 		}
 
@@ -77,6 +90,8 @@ namespace FirstWave.UPF.Test
 		private void AddHP_Clicked(object sender, EventArgs e)
 		{
 			Party[0].HP = (int.Parse(Party[0].HP) + 1).ToString();
+
+            ShowAbilities = !ShowAbilities;
 		}
 
         private void PrintContext(object context)

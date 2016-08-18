@@ -1,5 +1,6 @@
 ﻿using FirstWave.Unity.Gui.Data;
 using System;
+using System.Collections.Generic;
 
 namespace FirstWave.Unity.Gui.MarkupExtensions
 {
@@ -12,6 +13,8 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
         public string Path { get; private set; }
         public BindingMode Mode { get; private set; }
         public string ElementName { get; private set; }
+        public string Converter { get; private set; }
+        public string ConverterParameter { get; private set; }
 
         public BindingMarkupExtension()
         {
@@ -39,13 +42,27 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
                         Mode = (BindingMode)Enum.Parse(typeof(BindingMode), parts[1]);
                     else if (parts[0] == "ElementName")
                         ElementName = parts[1];
+                    else if (parts[0] == "Converter")
+                        Converter = parts[1];
+                    else if (parts[0] == "ConverterParameter")
+                        ConverterParameter = parts[1];
 				}
 			}
 		}
 
-		public override object GetValue()
-		{
-			return new Binding(target) { Path = Path, Mode = Mode, ElementName = ElementName };
-		}
+        public override object GetValue(IDictionary<string, object> resources)
+        {
+            var binding = new Binding(target);
+            binding.Path = Path;
+            binding.Mode = Mode;
+            binding.ElementName = ElementName;
+
+            if (!string.IsNullOrEmpty(Converter) && resources.ContainsKey(Converter))
+                binding.Converter = resources[Converter] as IValueConverter;
+
+            binding.ConverterParameter = ConverterParameter;
+
+            return binding;
+        }
 	}
 }
