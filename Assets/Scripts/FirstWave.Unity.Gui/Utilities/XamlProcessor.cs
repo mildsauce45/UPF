@@ -14,13 +14,11 @@ namespace FirstWave.Unity.Gui.Utilities
 {
 	public static class XamlProcessor
 	{
-		private static IDictionary<Assembly, Type[]> loadedTypes;
-		private static IDictionary<Type, IList<TypeConverter>> typeConverters;
+		private static IDictionary<Assembly, Type[]> loadedTypes;		
 		private static IDictionary<string, Type> markupExtensions;
 
 		internal static IDictionary<string, object> resources;
-
-		private static readonly Type STRING_TYPE = typeof(string);
+		internal static IDictionary<Type, IList<TypeConverter>> TypeConverters { get; private set; }		
 
 		static XamlProcessor()
 		{
@@ -92,10 +90,15 @@ namespace FirstWave.Unity.Gui.Utilities
 
 				// Not going to support keyless styles and templates for now
 				if (itemKey == null)
+				{
+					Debug.LogWarning("Version 1.0 does not support keyless resources.");
 					continue;
+				}
 
                 if (rn.LocalName == "Template")
                     resources.Add(itemKey.Value, new Template(rn));
+				else if (rn.LocalName == "Style")
+					resources.Add(itemKey.Value, new Style(rn));
                 else if (!string.IsNullOrEmpty(rn.NamespaceURI))
                 {
                     var typeName = string.Format("{0}.{1}", rn.NamespaceURI, rn.LocalName);
@@ -179,10 +182,10 @@ namespace FirstWave.Unity.Gui.Utilities
 				value = LoadMarkupExtension((string)value, control);
             else if (pi.PropertyType.IsEnumOrNullableEnum())
                 value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
-            else if (pi.PropertyType != STRING_TYPE)
+            else if (pi.PropertyType != Constants.STRING_TYPE)
 			{
 				// String values don't need to be converted
-				var tc = typeConverters[STRING_TYPE].FirstOrDefault(t => t.CanConvert(STRING_TYPE, pi.PropertyType));
+				var tc = TypeConverters[Constants.STRING_TYPE].FirstOrDefault(t => t.CanConvert(Constants.STRING_TYPE, pi.PropertyType));
                 if (tc != null)
                     value = tc.ConvertTo(value);
                 else
@@ -193,7 +196,7 @@ namespace FirstWave.Unity.Gui.Utilities
                     var t = pi.PropertyType;
                     t = Nullable.GetUnderlyingType(t) ?? t;
 
-                    //Coalesce to set the safe value using the default of t or the safe type.
+                    // Coalesce to set the safe value using the default of t or the safe type.
                     value = value == null ? t.Default() : Convert.ChangeType(value, t);
                 }
 			}
@@ -272,8 +275,8 @@ namespace FirstWave.Unity.Gui.Utilities
 
 		private static void LoadTypeConverters(Assembly assem)
 		{
-			if (typeConverters == null)
-				typeConverters = new Dictionary<Type, IList<TypeConverter>>();
+			if (TypeConverters == null)
+				TypeConverters = new Dictionary<Type, IList<TypeConverter>>();
 
 			var tcType = typeof(TypeConverter);
 
@@ -283,10 +286,10 @@ namespace FirstWave.Unity.Gui.Utilities
 			{
 				var tc = Activator.CreateInstance(t) as TypeConverter;
 
-				if (!typeConverters.ContainsKey(tc.FromType))
-					typeConverters.Add(tc.FromType, new List<TypeConverter>());
+				if (!TypeConverters.ContainsKey(tc.FromType))
+					TypeConverters.Add(tc.FromType, new List<TypeConverter>());
 
-				typeConverters[tc.FromType].Add(tc);
+				TypeConverters[tc.FromType].Add(tc);
 			}
 		}
 
