@@ -32,6 +32,9 @@ namespace FirstWave.Unity.Gui
 		public static readonly DependencyProperty DataContextProperty =
 			DependencyProperty.Register("DataContext", typeof(object), typeof(Control), new PropertyMetadata(null));
 
+		public static readonly DependencyProperty StyleProperty =
+			DependencyProperty.Register("Style", typeof(Style), typeof(Control), new PropertyMetadata(null));
+
 		#endregion
 
 		private IDictionary<string, object> dependencyPropertyValues;
@@ -81,6 +84,12 @@ namespace FirstWave.Unity.Gui
 		{
 			get { return GetValue(DataContextProperty); }
 			set { SetValue(DataContextProperty, value); }
+		}
+
+		public Style Style
+		{
+			get { return (Style)GetValue(StyleProperty); }
+			set { SetValue(StyleProperty, value); }
 		}
 
 		public string Name { get; set; }

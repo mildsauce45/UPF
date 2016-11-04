@@ -14,11 +14,11 @@ namespace FirstWave.Unity.Gui.Utilities
 {
 	public static class XamlProcessor
 	{
-		private static IDictionary<Assembly, Type[]> loadedTypes;		
+		private static IDictionary<Assembly, Type[]> loadedTypes;
 		private static IDictionary<string, Type> markupExtensions;
 
 		internal static IDictionary<string, object> resources;
-		internal static IDictionary<Type, IList<TypeConverter>> TypeConverters { get; private set; }		
+		internal static IDictionary<Type, IList<TypeConverter>> TypeConverters { get; private set; }
 
 		static XamlProcessor()
 		{
@@ -69,10 +69,10 @@ namespace FirstWave.Unity.Gui.Utilities
 
 						// The top-most panel/controls are going to get their DataContexts set to the passed in view model
 						if (control.DataContext == null)
-                            control.DataContext = viewModel;
+							control.DataContext = viewModel;
 
-                        if (control is Panel)
-						    LoadPanel(control as Panel, panelXml, viewModel);
+						if (control is Panel)
+							LoadPanel(control as Panel, panelXml, viewModel);
 					}
 					else
 						Debug.LogError("Could not locate panel class for type: " + panelXml.LocalName);
@@ -95,22 +95,36 @@ namespace FirstWave.Unity.Gui.Utilities
 					continue;
 				}
 
-                if (rn.LocalName == "Template")
-                    resources.Add(itemKey.Value, new Template(rn));
+				if (rn.LocalName == "Template")
+					resources.Add(itemKey.Value, new Template(rn));
 				else if (rn.LocalName == "Style")
-					resources.Add(itemKey.Value, new Style(rn));
-                else if (!string.IsNullOrEmpty(rn.NamespaceURI))
-                {
-                    var typeName = string.Format("{0}.{1}", rn.NamespaceURI, rn.LocalName);
+				{
+					var tt = rn.Attributes.GetNamedItem("TargetType");
+					if (tt == null || string.IsNullOrEmpty(tt.Value))
+					{
+						Debug.LogWarning("TargetType is required for styles. Skipping entry.");
+						continue;
+					}
 
-                    // I think we get away with this for right now, because importing UPF into your project doesn't
-                    // produce multiple dlls, you still just get the Assembly-CSharp.dll
-                    var assembly = Assembly.GetExecutingAssembly();
+					var matchingType = GetControlType(tt.Value);
+					if (matchingType == null)
+					{
+						Debug.LogWarning("TargetType not found for style with key: " + itemKey.Value);
+						continue;
+					}
 
-                    var matchingType = loadedTypes[assembly].FirstOrDefault(t => t.FullName == typeName);
-                    if (matchingType != null)
-                        resources.Add(itemKey.Value, Activator.CreateInstance(matchingType));
-                }
+					resources.Add(itemKey.Value, new Style(rn, matchingType));
+				}
+				else if (!string.IsNullOrEmpty(rn.NamespaceURI))
+				{
+					var typeName = string.Format("{0}.{1}", rn.NamespaceURI, rn.LocalName);
+
+					// I think we get away with this for right now, because importing UPF into your project doesn't
+					// produce multiple dlls, you still just get the Assembly-CSharp.dll
+					var matchingType = GetControlType(typeName, GetFullName);
+					if (matchingType != null)
+						resources.Add(itemKey.Value, Activator.CreateInstance(matchingType));
+				}
 			}
 		}
 
@@ -120,20 +134,20 @@ namespace FirstWave.Unity.Gui.Utilities
 
 			foreach (var childNode in panelXml.ChildNodes.OfType<XmlNode>())
 			{
-                Type childType = null;
+				Type childType = null;
 
-                if (string.IsNullOrEmpty(childNode.NamespaceURI))
-                    childType = loadedTypes[currentAssembly].FirstOrDefault(t => t.Name == childNode.LocalName);
-                else
-                {
-                    var typeName = string.Format("{0}.{1}", childNode.NamespaceURI, childNode.LocalName);
+				if (string.IsNullOrEmpty(childNode.NamespaceURI))
+					childType = loadedTypes[currentAssembly].FirstOrDefault(t => t.Name == childNode.LocalName);
+				else
+				{
+					var typeName = string.Format("{0}.{1}", childNode.NamespaceURI, childNode.LocalName);
 
-                    // I think we get away with this for right now, because importing UPF into your project doesn't
-                    // produce multiple dlls, you still just get the Assembly-CSharp.dll
-                    var assembly = Assembly.GetExecutingAssembly();
+					// I think we get away with this for right now, because importing UPF into your project doesn't
+					// produce multiple dlls, you still just get the Assembly-CSharp.dll
+					var assembly = Assembly.GetExecutingAssembly();
 
-                    childType = loadedTypes[assembly].FirstOrDefault(t => t.FullName == typeName);
-                }
+					childType = loadedTypes[assembly].FirstOrDefault(t => t.FullName == typeName);
+				}
 
 				if (childType != null)
 				{
@@ -155,7 +169,24 @@ namespace FirstWave.Unity.Gui.Utilities
 		{
 			var ct = control.GetType();
 
-			foreach (var attr in controlXml.Attributes.OfType<XmlAttribute>())
+			var allAttributes = controlXml.Attributes.OfType<XmlAttribute>();
+
+			// Style should be applied first (so local values take more precedent)
+			var styleAttribute = allAttributes.FirstOrDefault(x => x.LocalName == "Style");
+			if (styleAttribute != null)
+			{
+				var pi = ct.GetProperty(styleAttribute.LocalName);
+				if (pi != null) // How could it be?
+				{
+					LoadProperty(control, styleAttribute, pi, viewModel);
+					control.Style.Initialize(control);
+					control.Style.Apply(control);
+				}
+			}
+
+			var otherAttributes = allAttributes.Where(x => x.LocalName != "Style");
+			
+			foreach (var attr in otherAttributes)
 			{
 				var pi = ct.GetProperty(attr.LocalName);
 				if (pi != null)
@@ -180,25 +211,25 @@ namespace FirstWave.Unity.Gui.Utilities
 			if (((string)value).StartsWith("{"))
 				// If we start with the curly brace, then we're going to try and load a markup extension
 				value = LoadMarkupExtension((string)value, control);
-            else if (pi.PropertyType.IsEnumOrNullableEnum())
-                value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
-            else if (pi.PropertyType != Constants.STRING_TYPE)
+			else if (pi.PropertyType.IsEnumOrNullableEnum())
+				value = Enum.Parse(pi.PropertyType.GetUnderlyingType(), attr.Value, true);
+			else if (pi.PropertyType != Constants.STRING_TYPE)
 			{
 				// String values don't need to be converted
 				var tc = TypeConverters[Constants.STRING_TYPE].FirstOrDefault(t => t.CanConvert(Constants.STRING_TYPE, pi.PropertyType));
-                if (tc != null)
-                    value = tc.ConvertTo(value);
-                else
-                {
-                    // This is probably just converting between primitive types (or we're missing a type converter)
+				if (tc != null)
+					value = tc.ConvertTo(value);
+				else
+				{
+					// This is probably just converting between primitive types (or we're missing a type converter)
 
-                    // We need to handle nullable types as well
-                    var t = pi.PropertyType;
-                    t = Nullable.GetUnderlyingType(t) ?? t;
+					// We need to handle nullable types as well
+					var t = pi.PropertyType;
+					t = Nullable.GetUnderlyingType(t) ?? t;
 
-                    // Coalesce to set the safe value using the default of t or the safe type.
-                    value = value == null ? t.Default() : Convert.ChangeType(value, t);
-                }
+					// Coalesce to set the safe value using the default of t or the safe type.
+					value = value == null ? t.Default() : Convert.ChangeType(value, t);
+				}
 			}
 
 			if (value is Binding)
@@ -228,18 +259,18 @@ namespace FirstWave.Unity.Gui.Utilities
 
 			var meTypeIndex = data.IndexOf(' ');
 
-            string meType = data;
-            if (meTypeIndex >= 0)
-			    meType = data.Substring(0, meTypeIndex);
+			string meType = data;
+			if (meTypeIndex >= 0)
+				meType = data.Substring(0, meTypeIndex);
 
 			if (!markupExtensions.ContainsKey(meType))
 				return null;
 
 			var extension = Activator.CreateInstance(markupExtensions[meType]) as MarkupExtension;
 
-            string[] parms = null;
-            if (meTypeIndex >= 0)
-			    parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
+			string[] parms = null;
+			if (meTypeIndex >= 0)
+				parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
 
 			extension.Load(control, parms);
 
@@ -309,6 +340,26 @@ namespace FirstWave.Unity.Gui.Utilities
 				markupExtensions[me.Key] = t;
 			}
 		}
+
+		private static Type GetControlType(string typeName)
+		{
+			return GetControlType(typeName, GetName);
+		}
+
+		private static Type GetControlType(string typeName, Func<Type, string> getter)
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+
+			var matchingType = loadedTypes[assembly].FirstOrDefault(t => getter(t) == typeName);
+			if (matchingType != null)
+				return matchingType;
+
+			return null;
+		}
+
+		private static readonly Func<Type, string> GetFullName = t => t.FullName;
+
+		private static readonly Func<Type, string> GetName = t => t.Name;
 
 		#endregion
 	}

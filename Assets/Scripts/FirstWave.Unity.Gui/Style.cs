@@ -13,18 +13,21 @@ namespace FirstWave.Unity.Gui
 		private const string MARKUP_EXT_ERROR = "Version 1.0 does not support markup extensions in Styles.";
 
 		private readonly XmlNode xmlNode;
+		public readonly Type TargetType;
 
 		internal IDictionary<DependencyProperty, object> Setters { get; private set; }
 
-		internal Style(XmlNode xmlNode)
+		internal Style(XmlNode xmlNode, Type targetType)
 		{
 			this.xmlNode = xmlNode;
+			TargetType = targetType;
+
 			Setters = new Dictionary<DependencyProperty, object>();
 		}
 
 		internal void Initialize(Control control)
 		{
-			if (control == null)
+			if (control == null || Setters.Count > 0)
 				return;
 
 			foreach (var setter in xmlNode.ChildNodes.OfType<XmlNode>().Where(x => x.LocalName == "Setter"))
@@ -47,13 +50,18 @@ namespace FirstWave.Unity.Gui
 			}
 		}
 
+		internal void Apply(Control control)
+		{
+			foreach (var key in Setters.Keys)
+				TargetType.GetProperty(key.Name).SetValue(control, Setters[key], null);
+		}
+
 		private object LoadValue(string valueString, Type propertyType)
 		{
 			object value = valueString;
 
 			if (((string)value).StartsWith("{"))
 			{
-
 				Debug.Log(MARKUP_EXT_ERROR);
 				throw new Exception(MARKUP_EXT_ERROR);
 			}

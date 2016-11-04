@@ -30,7 +30,7 @@ namespace FirstWave.Unity.Gui
 			return style;
 		}
 
-		public GUIStyle GetButtonStyle(Texture2D background)
+		public GUIStyle GetButtonStyle(Texture2D background, Texture2D hoverBackground)
 		{
             GUIStyle style;
             if (background == null)
@@ -40,7 +40,7 @@ namespace FirstWave.Unity.Gui
                 style = new GUIStyle();
 
                 style.normal.background = background;
-                style.hover.background = background;
+                style.hover.background = hoverBackground ?? background;
                 style.alignment = TextAnchor.MiddleCenter;
             }
 

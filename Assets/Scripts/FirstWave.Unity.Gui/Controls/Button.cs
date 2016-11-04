@@ -14,6 +14,9 @@ namespace FirstWave.Unity.Gui.Controls
 		public static readonly DependencyProperty BackgroundProperty =
 			DependencyProperty.Register("Background", typeof(string), typeof(Button), new PropertyMetadata(null, OnBackgroundChanged));
 
+		public static readonly DependencyProperty HoverBackgroundProperty =
+			DependencyProperty.Register("HoverBackground", typeof(string), typeof(Button), new PropertyMetadata(null, OnHoverBackgroundChanged));
+
 		public static readonly DependencyProperty ImageProperty =
 			DependencyProperty.Register("Image", typeof(string), typeof(Button), new PropertyMetadata(null, OnImageChanged));
 
@@ -31,6 +34,16 @@ namespace FirstWave.Unity.Gui.Controls
 				b.background = null;
 			else
 				b.background = new TextureResourceLoader().LoadResource((string)newValue);
+		}
+
+		private static void OnHoverBackgroundChanged(Control c, object oldValue, object newValue)
+		{
+			var b = c as Button;
+
+			if (newValue == null)
+				b.hoverBackground = null;
+			else
+				b.hoverBackground = new TextureResourceLoader().LoadResource((string)newValue);
 		}
 
 		private static void OnImageChanged(Control c, object oldValue, object newValue)
@@ -53,6 +66,12 @@ namespace FirstWave.Unity.Gui.Controls
 		{
 			get { return (string)GetValue(BackgroundProperty); }
 			set { SetValue(BackgroundProperty, value); }
+		}
+
+		public string HoverBackground
+		{
+			get { return (string)GetValue(HoverBackgroundProperty); }
+			set { SetValue(HoverBackgroundProperty, value); }
 		}
 
 		public string Image
@@ -78,6 +97,7 @@ namespace FirstWave.Unity.Gui.Controls
         #region Private Variables
 
         private Texture background;
+		private Texture hoverBackground;
 		private Texture texture;
 
 		private GUIContent content;
@@ -107,7 +127,7 @@ namespace FirstWave.Unity.Gui.Controls
 
 			var bgContent = new GUIContent(background);
 
-			style = GUIManager.Instance.GetButtonStyle(background as Texture2D);
+			style = GUIManager.Instance.GetButtonStyle(background as Texture2D, hoverBackground as Texture2D);
 
 			Size = style.CalcSize(background != null ? bgContent : content);
 

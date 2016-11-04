@@ -28,7 +28,7 @@
     </Template>
 
     <Template Key="ButtonTestTemplate">
-      <Button Background="Images/crate" Image="Icons/fireball" Command="{Binding DataContext.FakeCommand, ElementName=TopLevelElement}" CommandParameter="{Binding}"/>
+      <Button Style="{Resource ButtonStyle}" Image="Icons/fireball" Command="{Binding DataContext.FakeCommand, ElementName=TopLevelElement}" CommandParameter="{Binding}"/>
     </Template>
 
     <Template Key="AbilityPanelTemplate">
@@ -36,6 +36,11 @@
     </Template>
   
     <converters:VisibilityConverter Key="VisibilityConverter"/>
+
+    <Style Key="ButtonStyle" TargetType="Button">
+      <Setter Property="Background" Value="Images/crate"/>
+      <Setter Property="HoverBackground" Value="Icons/book"/>
+    </Style>
   </Resources>
 
   <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
