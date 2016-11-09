@@ -1,5 +1,5 @@
 ﻿using FirstWave.Unity.Core.Utilities;
-using FirstWave.Unity.Gui.Utilities;
+using FirstWave.Unity.Gui.Utilities.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace FirstWave.Unity.Gui
 			else if (propertyType != Constants.STRING_TYPE)
 			{
 				// String values don't need to be converted
-				var tc = XamlProcessor.TypeConverters[Constants.STRING_TYPE].FirstOrDefault(t => t.CanConvert(Constants.STRING_TYPE, propertyType));
+				var tc = ParseContext.TypeConverters[Constants.STRING_TYPE].FirstOrDefault(t => t.CanConvert(Constants.STRING_TYPE, propertyType));
 				if (tc != null)
 					value = tc.ConvertTo(value);
 				else

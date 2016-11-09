@@ -4,117 +4,109 @@ using UnityEngine;
 
 namespace FirstWave.Unity.Gui.Panels
 {
-    public class StackPanel : Panel
-    {
-        public static readonly DependencyProperty OrientationProperty =
-            DependencyProperty.Register("Orientation", typeof(Orientation), typeof(StackPanel), new PropertyMetadata(Orientation.Vertical));
+	public class StackPanel : Panel
+	{
+		public static readonly DependencyProperty OrientationProperty =
+			DependencyProperty.Register("Orientation", typeof(Orientation), typeof(StackPanel), new PropertyMetadata(Orientation.Vertical));
 
-        public Orientation Orientation
-        {
-            get { return (Orientation)GetValue(OrientationProperty); }
-            set { SetValue(OrientationProperty, value); }
-        }
+		public Orientation Orientation
+		{
+			get { return (Orientation)GetValue(OrientationProperty); }
+			set { SetValue(OrientationProperty, value); }
+		}
 
-        public StackPanel()
-        {
-        }
+		#region Measure
 
-        #region Measure
+		public override Vector2 Measure()
+		{
+			if (Size.HasValue)
+				return Size.Value;
 
-        public override Vector2 Measure()
-        {
-            if (Size.HasValue)
-                return Size.Value;
+			if (Visibility == Visibility.Hidden)
+			{
+				Size = Vector2.zero;
 
-            if (Visibility == Visibility.Hidden)
-            {
-                Size = Vector2.zero;
+				return Vector2.zero;
+			}
 
-                return Vector2.zero;
-            }
+			if (Orientation == Orientation.Vertical)
+				return MeasureVertical();
 
-            if (Orientation == Orientation.Vertical)
-                return MeasureVertical();
+			return MeasureHorizontal();
+		}
 
-            return MeasureHorizontal();
-        }
+		private Vector2 MeasureVertical()
+		{
+			float height = this.Margin.Top + this.Margin.Bottom + this.Padding.Top + this.Padding.Bottom;
+			float width = this.Margin.Left + this.Margin.Right + this.Padding.Left + this.Padding.Right;
 
-        private Vector2 MeasureVertical()
-        {
-            float height = this.Margin.Top + this.Margin.Bottom + this.Padding.Top + this.Padding.Bottom;
-            float width = this.Margin.Left + this.Margin.Right + this.Padding.Left + this.Padding.Right;
+			foreach (var child in Children)
+				height += child.Measure().y;
 
-            foreach (var child in Children)
-            {
-                height += child.Measure().y;
-            }
+			width += Children.Count == 0 ? 0f : Children.Select(c => c.Size.Value.x).Max();
 
-            width += Children.Select(c => c.Size.Value.x).Max();
+			var actualSize = new Vector2(width, height);
 
-            var actualSize = new Vector2(width, height);
+			Size = actualSize;
 
-            Size = actualSize;
+			return actualSize;
+		}
 
-            return actualSize;
-        }
+		private Vector2 MeasureHorizontal()
+		{
+			float height = this.Margin.Top + this.Margin.Bottom + this.Padding.Top + this.Padding.Bottom;
+			float width = this.Margin.Left + this.Margin.Right + this.Padding.Left + this.Padding.Right;
 
-        private Vector2 MeasureHorizontal()
-        {
-            float height = this.Margin.Top + this.Margin.Bottom + this.Padding.Top + this.Padding.Bottom;
-            float width = this.Margin.Left + this.Margin.Right + this.Padding.Left + this.Padding.Right;
+			foreach (var child in Children)
+				width += child.Measure().x;
 
-            foreach (var child in Children)
-            {
-                width += child.Measure().x;
-            }
+			height += Children.Select(c => c.Measure().y).Max();
 
-            height += Children.Select(c => c.Measure().y).Max();
+			var actualSize = new Vector2(width, height);
 
-            var actualSize = new Vector2(width, height);
+			Size = actualSize;
 
-            Size = actualSize;
+			return actualSize;
+		}
 
-            return actualSize;
-        }
+		#endregion
 
-        #endregion
+		#region Layout
 
-        #region Layout
+		public override void Layout(Rect r)
+		{
+			if (Location.HasValue)
+				return;
 
-        public override void Layout(Rect r)
-        {
-            if (Location.HasValue)
-                return;
+			float x = GetStartingXCoordinate(r);
+			float y = GetStartingYCoordinate(r);
 
-            float x = GetStartingXCoordinate(r);
-            float y = GetStartingYCoordinate(r);
+			Location = new Vector2(x, y);
 
-            Location = new Vector2(x, y);
+			if (Orientation == Orientation.Vertical)
+			{
+				foreach (var child in Children)
+				{
+					var childSize = child.Size ?? Vector2.zero;
 
-            if (Orientation == Orientation.Vertical)
-            {
-                foreach (var child in Children)
-                {
-                    var childSize = child.Size ?? Vector2.zero;
+					child.Layout(new Rect(x, y, Size.Value.x, childSize.y));
 
-                    child.Layout(new Rect(x, y, Size.Value.x, childSize.y));
+					y += childSize.y;
+				}
+			}
+			else
+			{
+				foreach (var child in Children)
+				{
+					var childSize = child.Size ?? Vector2.zero;
 
-                    y += childSize.y;
-                }
-            }
-            else
-            {
-                foreach (var child in Children)
-                {
-                    var childSize = child.Size ?? Vector2.zero;
+					child.Layout(new Rect(x, y, childSize.x, Size.Value.y));
 
-                    child.Layout(new Rect(x, y, childSize.x, Size.Value.y));
+					x += childSize.x;
+				}
+			}
+		}
 
-                    x += childSize.x;
-                }
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

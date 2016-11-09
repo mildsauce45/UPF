@@ -68,6 +68,16 @@
     <Compile Include="Assets\Scripts\FirstWave.Messaging\Messenger.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Style.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\IXamlNodeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\ParseContext.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\AttributeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\ControlNodeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\CustomControlNodeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\NonControlResourceNodeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\ResourcesNodeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\StyleAttributeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\StyleNodeVisitor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\Visitors\TemplateNodeVisitor.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\Controls\TestControl.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestSecondGUI.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestStackPanel.cs" />
@@ -128,7 +138,7 @@
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\TypeConverters\ThicknessTypeConverter.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\TypeConverters\TypeConverter.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\VisualTreeHelper.cs" />
-    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\XamlProcessor.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\XamlProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\UPF\Combat.xml" />

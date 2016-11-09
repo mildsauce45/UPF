@@ -1,23 +1,25 @@
-﻿using FirstWave.Unity.Gui.Utilities;
+﻿using FirstWave.Unity.Gui.Utilities.Parsing;
 using System.Xml;
 
 namespace FirstWave.Unity.Gui
 {
-    public sealed class Template
-    {
-        private XmlNode XmlTemplate { get; set; }
+	public sealed class Template
+	{
+		private readonly XmlNode xmlTemplate;
+		private readonly ParseContext context;
 
-        internal Template(XmlNode xmlTemplate)
-        {
-            XmlTemplate = xmlTemplate;
-        }
+		internal Template(XmlNode xmlTemplate, ParseContext context)
+		{
+			this.xmlTemplate = xmlTemplate;
+			this.context = context;
+		}
 
-        internal Control GenerateItem(object item)
-        {
-            var control = XamlProcessor.LoadDataTemplate(XmlTemplate, item);
-            control.DataContext = item;
+		internal Control GenerateItem(object item)
+		{
+			var control = XamlProcessor.LoadDataTemplate(xmlTemplate, context, item);
+			control.DataContext = item;
 
-            return control;
-        }
-    }
+			return control;
+		}
+	}
 }

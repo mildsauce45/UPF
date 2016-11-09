@@ -1,8 +1,8 @@
 ﻿using FirstWave.Messaging;
 using FirstWave.Unity.Core.Input;
 using FirstWave.Unity.Data;
-using FirstWave.Unity.Gui.Panels;
 using FirstWave.Unity.Gui.Utilities;
+using FirstWave.Unity.Gui.Utilities.Parsing;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
