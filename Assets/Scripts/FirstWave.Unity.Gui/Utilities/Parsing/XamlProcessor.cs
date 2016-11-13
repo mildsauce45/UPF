@@ -71,8 +71,6 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing
 
 		internal static void LoadAttributes(Control control, XmlNode controlXml, ParseContext context)
 		{
-			var ct = control.GetType();
-
 			var allAttributes = controlXml.Attributes.OfType<XmlAttribute>();
 
 			// Style should be applied first (so local values take more precedent)
