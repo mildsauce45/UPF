@@ -14,10 +14,9 @@ of the WPF framework, most notably templating and two way data binding, but it s
 
 ### Next Up
 
-* XAML parsing improvements (it's kinda rough right now)
+* Templating - For my own use, this isn't too necessary, but in order to turn this into a general purpose library I'd say it's required
 
 ### Future Improvements
 
 * Full fledged data binding - Not necessary right now as I have no need for even simple text input boxes
-* Templating - For my own use, this isn't too necessary, but in order to turn this into a general purpose library I'd say it's required
 * Use the new GUI system - All of my work has been with the legacy unity gui system, so I just used that. It would be nice to be able to choose between the two with a switch
