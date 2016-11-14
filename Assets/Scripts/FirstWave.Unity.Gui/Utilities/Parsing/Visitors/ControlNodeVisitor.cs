@@ -29,10 +29,6 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing.Visitors
 
 				XamlProcessor.LoadAttributes(control, node, context);
 
-				// The top-most panel/controls are going to get their DataContexts set to the passed in view model
-				if (control.DataContext == null)
-					control.DataContext = context.ViewModel;
-
 				if (control is Panel)
 					XamlProcessor.LoadPanel(control as Panel, node, context);
 

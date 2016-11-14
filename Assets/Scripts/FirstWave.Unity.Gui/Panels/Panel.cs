@@ -41,5 +41,13 @@ namespace FirstWave.Unity.Gui.Panels
                     c.InvalidateLayout(source);
             }
         }
-    }
+
+		internal override void ResolveDataContext(object viewModel)
+		{
+			base.ResolveDataContext(viewModel);
+
+			foreach (var c in Children)
+				c.ResolveDataContext(viewModel);
+		}
+	}
 }

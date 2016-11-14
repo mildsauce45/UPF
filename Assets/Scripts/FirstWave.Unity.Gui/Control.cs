@@ -181,6 +181,18 @@ namespace FirstWave.Unity.Gui
 			return null;
 		}
 
+		internal virtual void ResolveDataContext(object viewModel)
+		{
+			if (Parent == null)
+				DataContext = viewModel;
+			else if (dependencyPropertyValues[DataContextProperty.Name] != null)
+			{
+				// These should auto-resolve
+			}
+			else
+				DataContext = Parent.DataContext;
+		}
+
 		#endregion
 
 		#region UPF Methods

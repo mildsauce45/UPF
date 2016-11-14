@@ -34,6 +34,12 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing
 				visitor.Visit(panelXml, context);
 			}
 
+			// Now that the full tree is loaded, let's go ahead and resolve each controls data context
+			// This is primarily for any controls who have a binding set into their DataContext since 
+			// at the time we attempt to resolve during parsing, it's not properly parented yet
+			foreach (var control in context.Controls)
+				control.ResolveDataContext(context.ViewModel);
+
 			return context.Controls;
 		}
 
