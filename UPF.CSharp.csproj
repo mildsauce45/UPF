@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\FirstWave.Messaging\Messenger.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Camera\PixelPerfectCameraScript.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Style.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\IXamlNodeVisitor.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\Parsing\ParseContext.cs" />
