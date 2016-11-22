@@ -1,4 +1,5 @@
 ﻿using FirstWave.Unity.Core.Utilities;
+using FirstWave.Unity.Gui.Controls;
 using UnityEngine;
 
 namespace FirstWave.Unity.Gui
@@ -30,19 +31,30 @@ namespace FirstWave.Unity.Gui
 			return style;
 		}
 
-		public GUIStyle GetButtonStyle(Texture2D background, Texture2D hoverBackground)
+		public GUIStyle GetButtonStyle(ButtonStyle bStyle)
 		{
-            GUIStyle style;
-            if (background == null)
-                style = GUI.skin.button;
-            else
-            {
-                style = new GUIStyle();
+			GUIStyle style;
+			if (bStyle == null || bStyle.Background == null)
+				style = GUI.skin.button;
+			else
+			{
+				style = new GUIStyle();
 
-                style.normal.background = background;
-                style.hover.background = hoverBackground ?? background;
-                style.alignment = TextAnchor.MiddleCenter;
-            }
+				style.normal.background = bStyle.Background;
+				style.hover.background = bStyle.HoverBackground;
+				style.active.background = bStyle.PressedBackground;
+
+				var font = bStyle.Font ?? fontProperties;
+
+				if (fontProperties != null)
+				{
+					style.font = fontProperties.font;
+					style.fontSize = fontProperties.fontSize;					
+					style.normal.textColor = fontProperties.fontColor;
+				}
+
+				style.alignment = TextAnchor.MiddleCenter;
+			}
 
 			return style;
 		}

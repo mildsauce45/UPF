@@ -17,6 +17,9 @@ namespace FirstWave.Unity.Gui.Controls
 		public static readonly DependencyProperty HoverBackgroundProperty =
 			DependencyProperty.Register("HoverBackground", typeof(string), typeof(Button), new PropertyMetadata(null, OnHoverBackgroundChanged));
 
+		public static readonly DependencyProperty PressedBackgroundProperty =
+			DependencyProperty.Register("PressedBackground", typeof(string), typeof(Button), new PropertyMetadata(null, OnPressedBackgroundChanged));
+
 		public static readonly DependencyProperty ImageProperty =
 			DependencyProperty.Register("Image", typeof(string), typeof(Button), new PropertyMetadata(null, OnImageChanged));
 
@@ -44,6 +47,16 @@ namespace FirstWave.Unity.Gui.Controls
 				b.hoverBackground = null;
 			else
 				b.hoverBackground = new TextureResourceLoader().LoadResource((string)newValue);
+		}
+
+		private static void OnPressedBackgroundChanged(Control c, object oldValue, object newValue)
+		{
+			var b = c as Button;
+
+			if (newValue == null)
+				b.pressedBackground = null;
+			else
+				b.pressedBackground = new TextureResourceLoader().LoadResource((string)newValue);
 		}
 
 		private static void OnImageChanged(Control c, object oldValue, object newValue)
@@ -98,6 +111,7 @@ namespace FirstWave.Unity.Gui.Controls
 
         private Texture background;
 		private Texture hoverBackground;
+		private Texture pressedBackground;
 		private Texture texture;
 
 		private GUIContent content;
@@ -127,7 +141,7 @@ namespace FirstWave.Unity.Gui.Controls
 
 			var bgContent = new GUIContent(background);
 
-			style = GUIManager.Instance.GetButtonStyle(background as Texture2D, hoverBackground as Texture2D);
+			style = GUIManager.Instance.GetButtonStyle(ConvertToStyle());
 
 			Size = style.CalcSize(background != null ? bgContent : content);
 
@@ -156,5 +170,15 @@ namespace FirstWave.Unity.Gui.Controls
 		}
 
 		#endregion
+
+		private ButtonStyle ConvertToStyle()
+		{
+			return new ButtonStyle
+			{
+				Background = background as Texture2D,
+				HoverBackground = hoverBackground as Texture2D,
+				PressedBackground = pressedBackground as Texture2D
+			};
+		}
 	}
 }
