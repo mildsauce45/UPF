@@ -21,12 +21,7 @@ namespace FirstWave.Unity.Gui
 			if (fontProperties == null)
 				style.normal.textColor = Color.white;
 			else
-			{
-				style.normal.textColor = fontProperties.fontColor;
-				style.font = fontProperties.font;
-				style.fontSize = fontProperties.fontSize;
-				style.wordWrap = true;
-			}
+				ApplyFont(style, fontProperties);
 
 			return style;
 		}
@@ -35,7 +30,10 @@ namespace FirstWave.Unity.Gui
 		{
 			GUIStyle style;
 			if (bStyle == null || bStyle.Background == null)
+			{
 				style = GUI.skin.button;
+				ApplyFont(style, fontProperties);
+			}
 			else
 			{
 				style = new GUIStyle();
@@ -44,19 +42,23 @@ namespace FirstWave.Unity.Gui
 				style.hover.background = bStyle.HoverBackground;
 				style.active.background = bStyle.PressedBackground;
 
-				var font = bStyle.Font ?? fontProperties;
+				var fp = bStyle.Font ?? fontProperties;
 
-				if (fontProperties != null)
-				{
-					style.font = fontProperties.font;
-					style.fontSize = fontProperties.fontSize;					
-					style.normal.textColor = fontProperties.fontColor;
-				}
+				if (fp != null)
+					ApplyFont(style, fp);
 
 				style.alignment = TextAnchor.MiddleCenter;
 			}
 
 			return style;
+		}
+
+		private void ApplyFont(GUIStyle style, FontProperties fp)
+		{
+			style.normal.textColor = fp.fontColor;
+			style.font = fp.font;
+			style.fontSize = fp.fontSize;
+			style.wordWrap = true;
 		}
 	}
 }
