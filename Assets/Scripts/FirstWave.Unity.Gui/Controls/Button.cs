@@ -87,6 +87,12 @@ namespace FirstWave.Unity.Gui.Controls
 			set { SetValue(HoverBackgroundProperty, value); }
 		}
 
+		public string PressedBackground
+		{
+			get { return (string)GetValue(PressedBackgroundProperty); }
+			set { SetValue(PressedBackgroundProperty, value); }
+		}
+
 		public string Image
 		{
 			get { return (string)GetValue(ImageProperty); }
