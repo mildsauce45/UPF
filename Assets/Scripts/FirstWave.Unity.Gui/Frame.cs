@@ -1,11 +1,11 @@
-﻿using FirstWave.Messaging;
-using FirstWave.Unity.Core.Input;
+﻿using FirstWave.Unity.Core.Input;
 using FirstWave.Unity.Data;
 using FirstWave.Unity.Gui.Utilities;
 using FirstWave.Unity.Gui.Utilities.Parsing;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace FirstWave.Unity.Gui
 {
@@ -16,15 +16,15 @@ namespace FirstWave.Unity.Gui
 	{
 		private IList<Control> controls;
 		private InputManager inputManager;
-		
-		private object viewModel;		
+
+		private object viewModel;
 
 		private int prevWidth;
 		private int prevHeight;
 
 		void Awake()
 		{
-            controls = new List<Control>();
+			controls = new List<Control>();
 
 			inputManager = FindObjectOfType<InputManager>();
 
@@ -33,6 +33,20 @@ namespace FirstWave.Unity.Gui
 				inputManager = InputManager.Instance;
 
 			DontDestroyOnLoad(gameObject);
+
+			SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+		}
+
+		private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
+		{
+			// If we're clearing the current scene altogether, then let's reset the frame
+			if (loadMode == LoadSceneMode.Single)
+			{
+				controls.Clear();
+				viewModel = null;
+			}
+
+			// Maybe do something with an additive load?
 		}
 
 		public void AddControl(Control control)
@@ -42,9 +56,9 @@ namespace FirstWave.Unity.Gui
 
 		public void Clear()
 		{
-            controls.Clear();
+			controls.Clear();
 		}
-		
+
 		public void LoadPage(string view, object viewModel)
 		{
 			Clear();
@@ -112,17 +126,6 @@ namespace FirstWave.Unity.Gui
 
 			prevWidth = Screen.width;
 			prevHeight = Screen.height;
-		}
-
-		void OnLevelWasLoaded()
-		{
-            controls.Clear();
-			viewModel = null;
-		}
-
-		void OnDestroy()
-		{
-			Messenger.Default.Unregister(this);
 		}
 
 		#endregion

@@ -35,6 +35,9 @@ namespace FirstWave.Unity.Gui
 		public static readonly DependencyProperty StyleProperty =
 			DependencyProperty.Register("Style", typeof(Style), typeof(Control), new PropertyMetadata(null));
 
+		public static readonly DependencyProperty EnabledProperty =
+			DependencyProperty.Register("Enabled", typeof(bool), typeof(Control), new PropertyMetadata(true));
+
 		#endregion
 
 		private IDictionary<string, object> dependencyPropertyValues;
@@ -90,6 +93,12 @@ namespace FirstWave.Unity.Gui
 		{
 			get { return (Style)GetValue(StyleProperty); }
 			set { SetValue(StyleProperty, value); }
+		}
+
+		public bool Enabled
+		{
+			get { return (bool)GetValue(EnabledProperty); }
+			set { SetValue(EnabledProperty, value); }
 		}
 
 		public string Name { get; set; }
