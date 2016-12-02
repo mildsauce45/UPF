@@ -87,6 +87,12 @@ namespace FirstWave.Unity.Gui.Controls
 			set { SetValue(HoverBackgroundProperty, value); }
 		}
 
+		public string PressedBackground
+		{
+			get { return (string)GetValue(PressedBackgroundProperty); }
+			set { SetValue(PressedBackgroundProperty, value); }
+		}
+
 		public string Image
 		{
 			get { return (string)GetValue(ImageProperty); }
@@ -158,6 +164,11 @@ namespace FirstWave.Unity.Gui.Controls
 
 		public override void Draw()
 		{
+			// For the legacy system this is how we have to do it
+			bool prevEnabled = GUI.enabled;
+
+			GUI.enabled = Enabled;
+
 			if (GUI.Button(new Rect(Location ?? Vector2.zero, Size ?? Vector2.zero), content, style))
 			{
 				if (OnClick != null)
@@ -167,6 +178,9 @@ namespace FirstWave.Unity.Gui.Controls
                 if (command != null && command.CanExecute(CommandParameter))
                     command.Execute(CommandParameter);
 			}
+
+			// Restore the legacy value
+			GUI.enabled = prevEnabled;
 		}
 
 		#endregion

@@ -37,6 +37,8 @@ namespace FirstWave.Unity.Gui.Controls
         {
             var oldEnabled = GUI.enabled;
 
+            GUI.enabled = Enabled;
+
             string text;
             var style = GUIManager.Instance.GetTextBoxStyle(null);
 
@@ -46,6 +48,8 @@ namespace FirstWave.Unity.Gui.Controls
                 text = GUI.TextField(rect, Text ?? string.Empty, MaxLength.Value, style);
             else
                 text = GUI.TextField(rect, Text ?? string.Empty, style);
+
+            GUI.enabled = oldEnabled;
 
             if (text != Text)
                 FireTextChanged(Text, text);

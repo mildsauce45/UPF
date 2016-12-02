@@ -40,7 +40,7 @@ namespace FirstWave.Unity.Gui
 
 				style.normal.background = bStyle.Background;
 				style.hover.background = bStyle.HoverBackground;
-				style.active.background = bStyle.PressedBackground;
+				style.active.background = bStyle.PressedBackground;				
 
 				var fp = bStyle.Font ?? fontProperties;
 
