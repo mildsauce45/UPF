@@ -77,9 +77,9 @@ namespace FirstWave.UPF.Test
             ShowAbilities = true;
 
 			InnerVM = new InnerVM();
+            InnerVM.TextBoxText = "Test2";
 
             TextBoxText = "Test";
-
         }
 
 		public override void Update()
@@ -112,8 +112,16 @@ namespace FirstWave.UPF.Test
 
 	public class InnerVM
 	{
+        private string tbt;
+
 		public float TotalWidth { get; set; }
 		public float HalfWidth { get; set; }
+
+        public string TextBoxText
+        {
+            get { return tbt; }
+            set { tbt = value; Debug.Log("new value: " + value); }
+        }
 
 		public InnerVM()
 		{

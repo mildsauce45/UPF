@@ -56,7 +56,7 @@
   </StackPanel>
   
   <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-    <TextBox Text="{Binding TextBoxText, Mode=TwoWay}" MaxLength="8" />
+    <TextBox Text="{Binding InnerVM.TextBoxText, Mode=TwoWay}" MaxLength="8" />
   </StackPanel>
 
   <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Padding="10,10,10,70">

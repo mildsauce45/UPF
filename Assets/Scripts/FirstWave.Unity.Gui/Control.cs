@@ -123,7 +123,10 @@ namespace FirstWave.Unity.Gui
 
 			if (!Equals(oldValue, value))
 			{
-				dependencyPropertyValues[property.Name] = value;
+                if (dependencyPropertyValues[property.Name] is Binding)
+                    (dependencyPropertyValues[property.Name] as Binding).UpdateSource(value);
+                else
+				    dependencyPropertyValues[property.Name] = value;
 
 				// If the property is supposed to recalculate the the layout of the control call the InvalidateLayout
 				if (property.Metadata != null && property.Metadata.AffectsLayout)

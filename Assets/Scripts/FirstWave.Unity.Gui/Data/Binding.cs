@@ -71,6 +71,33 @@
 			return localSrc;
 		}
 
+        public void UpdateSource(object value)
+        {
+            // I'll let you call this all day long, but unless the binding is set to TwoWay, we're just gonna exit
+            if (Mode != BindingMode.TwoWay)
+                return;
+
+            var src = Source;
+
+            if (src == null)
+                return;
+
+            var localSrc = src;
+
+            if (!string.IsNullOrEmpty(Path))
+            {
+                var pathParts = Path.Split(new char[] { '.' });
+
+                if (pathParts.Length > 1)
+                {
+                    for (int i = 0; i <= pathParts.Length - 2; i++)
+                        localSrc = localSrc.GetType().GetProperty(pathParts[i]).GetValue(localSrc, null);
+                }
+
+                localSrc.GetType().GetProperty(pathParts[pathParts.Length - 1]).SetValue(localSrc, value, null);
+            }
+        }
+
 		private object GetSource()
 		{
 			if (target is Control)
