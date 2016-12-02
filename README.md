@@ -6,7 +6,7 @@ A Unity GUI framework based on WPF.
 This package attempts to create a unified system for putting together GUI components in Unity. All my previous work uses ad hoc written
 components that shared much, but not enough code to display. I found myself wanting a standard UI framework and I'm pretty familiar with
 WPF, so I decided to give it a shot creating something along those lines. The is a first pass attempt and is lacking many of the niceties
-of the WPF framework, most notably templating and two way data binding, but it solves my basic needs for the moment.
+of the WPF framework, most notably templating, but it solves my basic needs for the moment.
 
 ### Examples
 
