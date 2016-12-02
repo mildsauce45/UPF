@@ -3,6 +3,7 @@
 	public enum BindingMode
 	{
 		OneTime,
-		OneWay
+		OneWay,
+        TwoWay
 	}
 }

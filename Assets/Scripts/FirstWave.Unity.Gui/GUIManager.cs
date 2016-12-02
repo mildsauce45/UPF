@@ -53,7 +53,19 @@ namespace FirstWave.Unity.Gui
 			return style;
 		}
 
-		private void ApplyFont(GUIStyle style, FontProperties fp)
+        public GUIStyle GetTextBoxStyle(FontProperties font)
+        {
+            var style = GUI.skin.textField;
+
+            var fp = font ?? fontProperties;
+
+            if (fp != null)
+                ApplyFont(style, fp);
+
+            return style; 
+        }
+
+        private void ApplyFont(GUIStyle style, FontProperties fp)
 		{
 			style.normal.textColor = fp.fontColor;
 			style.font = fp.font;

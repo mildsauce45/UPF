@@ -51,6 +51,7 @@ namespace FirstWave.UPF.Test
         }
 
 		public InnerVM InnerVM { get; private set; }
+        public string TextBoxText { get; set; }
 
 		public TestViewViewModel()
 		{
@@ -76,7 +77,10 @@ namespace FirstWave.UPF.Test
             ShowAbilities = true;
 
 			InnerVM = new InnerVM();
-		}
+
+            TextBoxText = "Test";
+
+        }
 
 		public override void Update()
 		{
