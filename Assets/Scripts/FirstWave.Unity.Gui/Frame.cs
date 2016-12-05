@@ -12,6 +12,8 @@ namespace FirstWave.Unity.Gui
 	/// <summary>
 	/// Base Container for all my GUI controls. It will take up the entire screen space.
 	/// </summary>
+    [RequireComponent(typeof(InputManager))]
+    [RequireComponent(typeof(GUIManager))]
 	public class Frame : MonoBehaviour
 	{
 		private IList<Control> controls;
@@ -26,13 +28,9 @@ namespace FirstWave.Unity.Gui
 		{
 			controls = new List<Control>();
 
-			inputManager = FindObjectOfType<InputManager>();
-
 			// If there isn't an input manager in the scene create one as it's a safesingleton
 			if (!inputManager)
-				inputManager = InputManager.Instance;
-
-			DontDestroyOnLoad(gameObject);
+				inputManager = GetComponent<InputManager>();
 
 			SceneManager.sceneLoaded += SceneManager_sceneLoaded;
 		}

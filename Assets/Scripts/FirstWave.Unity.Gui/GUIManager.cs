@@ -1,57 +1,59 @@
-﻿using FirstWave.Unity.Core.Utilities;
+﻿using System;
+using FirstWave.Unity.Core.Utilities;
 using FirstWave.Unity.Gui.Controls;
 using UnityEngine;
 
 namespace FirstWave.Unity.Gui
 {
-	public class GUIManager : SafeSingleton<GUIManager>
-	{
-		protected override string managerName
-		{
-			get { return "GuiManager"; }
-		}
+    public class GUIManager : SafeSingleton<GUIManager>
+    {
+        public BorderTextures borderTextures;
+        public FontProperties fontProperties;
 
-		public BorderTextures borderTextures;
-		public FontProperties fontProperties;
+        protected override string managerName
+        {
+            get { return "GUI Manager"; }
 
-		public GUIStyle GetMessageBoxStyle(FontProperties fontProperties)
-		{
-			var style = new GUIStyle();
+        }
 
-			if (fontProperties == null)
-				style.normal.textColor = Color.white;
-			else
-				ApplyFont(style, fontProperties);
+        public GUIStyle GetMessageBoxStyle(FontProperties fontProperties)
+        {
+            var style = new GUIStyle();
 
-			return style;
-		}
+            if (fontProperties == null)
+                style.normal.textColor = Color.white;
+            else
+                ApplyFont(style, fontProperties);
 
-		public GUIStyle GetButtonStyle(ButtonStyle bStyle)
-		{
-			GUIStyle style;
-			if (bStyle == null || bStyle.Background == null)
-			{
-				style = GUI.skin.button;
-				ApplyFont(style, fontProperties);
-			}
-			else
-			{
-				style = new GUIStyle();
+            return style;
+        }
 
-				style.normal.background = bStyle.Background;
-				style.hover.background = bStyle.HoverBackground;
-				style.active.background = bStyle.PressedBackground;				
+        public GUIStyle GetButtonStyle(ButtonStyle bStyle)
+        {
+            GUIStyle style;
+            if (bStyle == null || bStyle.Background == null)
+            {
+                style = GUI.skin.button;
+                ApplyFont(style, fontProperties);
+            }
+            else
+            {
+                style = new GUIStyle();
 
-				var fp = bStyle.Font ?? fontProperties;
+                style.normal.background = bStyle.Background;
+                style.hover.background = bStyle.HoverBackground;
+                style.active.background = bStyle.PressedBackground;
 
-				if (fp != null)
-					ApplyFont(style, fp);
+                var fp = bStyle.Font ?? fontProperties;
 
-				style.alignment = TextAnchor.MiddleCenter;
-			}
+                if (fp != null)
+                    ApplyFont(style, fp);
 
-			return style;
-		}
+                style.alignment = TextAnchor.MiddleCenter;
+            }
+
+            return style;
+        }
 
         public GUIStyle GetTextBoxStyle(FontProperties font)
         {
@@ -62,15 +64,15 @@ namespace FirstWave.Unity.Gui
             if (fp != null)
                 ApplyFont(style, fp);
 
-            return style; 
+            return style;
         }
 
         private void ApplyFont(GUIStyle style, FontProperties fp)
-		{
-			style.normal.textColor = fp.fontColor;
-			style.font = fp.font;
-			style.fontSize = fp.fontSize;
-			style.wordWrap = true;
-		}
-	}
+        {
+            style.normal.textColor = fp.fontColor;
+            style.font = fp.font;
+            style.fontSize = fp.fontSize;
+            style.wordWrap = true;
+        }
+    }
 }

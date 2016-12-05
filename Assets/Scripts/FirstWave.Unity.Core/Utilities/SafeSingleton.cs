@@ -5,7 +5,8 @@ namespace FirstWave.Unity.Core.Utilities
     public abstract class SafeSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         protected static T _instance;
-
+        public bool persistAcrossScenes = true;
+        
         public static T Instance
         {
             get
@@ -22,9 +23,11 @@ namespace FirstWave.Unity.Core.Utilities
                         _instance = managerObject.AddComponent<T>();
 
                         managerObject.name = _instance.GetComponent<SafeSingleton<T>>().managerName;
-
-                        DontDestroyOnLoad(managerObject);
                     }
+
+                    var ss = _instance.GetComponent<SafeSingleton<T>>();
+                    if (ss.persistAcrossScenes)
+                        DontDestroyOnLoad(_instance.gameObject);
                 }
 
                 return _instance;

@@ -1,10 +1,10 @@
-﻿using FirstWave.Unity.Core.Utilities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace FirstWave.Unity.Core.Input
 {
-    public class InputManager : SafeSingleton<InputManager>
+    public class InputManager : MonoBehaviour
     {
         public const string UP = "up";
         public const string DOWN = "down";
@@ -23,11 +23,6 @@ namespace FirstWave.Unity.Core.Input
 
         private IDictionary<string, bool> prevState;
         private IDictionary<string, bool> currentState;
-
-        protected override string managerName
-        {
-            get { return "Input Manager"; }
-        }
 
         void Awake()
         {
