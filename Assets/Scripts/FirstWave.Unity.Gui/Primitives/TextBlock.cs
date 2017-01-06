@@ -10,7 +10,14 @@ namespace FirstWave.Unity.Gui.Primitives
 
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
+            get
+            {
+                var obj = GetValue(TextProperty);
+                if (obj == null)
+                    return string.Empty;
+
+                return obj.ToString();
+            }
             set { SetValue(TextProperty, value); }
         }
 
