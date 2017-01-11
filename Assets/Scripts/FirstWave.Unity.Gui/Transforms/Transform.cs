@@ -15,5 +15,10 @@ namespace FirstWave.Unity.Gui.Transforms
         public virtual void AfterTransform()
         {
         }
+
+        protected bool CanTransformElement(Control control)
+        {
+            return control != null && control.Location.HasValue && control.Size.HasValue;
+        }
     }
 }

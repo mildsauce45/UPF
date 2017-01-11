@@ -2,17 +2,20 @@
 
 namespace FirstWave.Unity.Gui.Transforms
 {
-    public class RotateTransform : Transform
+    public class ScaleTransform : Transform
     {
-        public float Angle { get; set; }
+        public float ScaleX { get; set; }
+        public float ScaleY { get; set; }
         public float OriginX { get; set; }
         public float OriginY { get; set; }
 
         private Matrix4x4 transformMatrix;
         private Control control;
-
-        public RotateTransform()
+        
+        public ScaleTransform()
         {
+            ScaleX = 1;
+            ScaleY = 1;
             OriginX = 0.5f;
             OriginY = 0.5f;
         }
@@ -30,7 +33,7 @@ namespace FirstWave.Unity.Gui.Transforms
 
             var pivot = new Vector2(loc.x + (size.x / (1 / OriginX)), loc.y + (size.y / (1 / OriginY)));
 
-            GUIUtility.RotateAroundPivot(Angle, pivot);
+            GUIUtility.ScaleAroundPivot(new Vector2(ScaleX, ScaleY), pivot);
         }
 
         public override void AfterTransform()
