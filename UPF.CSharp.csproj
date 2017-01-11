@@ -68,6 +68,9 @@
     <Compile Include="Assets\Scripts\FirstWave.Messaging\Messenger.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Messaging\WeakAction.cs" />
     <Compile Include="Assets\Scripts\FirstWave.Unity.Core\Utilities\SpriteRendererExtensions.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Transforms\RotateTransform.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Transforms\Transform.cs" />
+    <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Transforms\TranslateTransform.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\Controls\TestControl.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestSecondGUI.cs" />
     <Compile Include="Assets\Scripts\FirstWave.UPF.Test\TestStackPanel.cs" />
@@ -146,7 +149,9 @@
     <Compile Include="Assets\Scripts\FirstWave.Unity.Gui\Utilities\VisualTreeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\UPF\Combat.xml" />
+    <None Include="Assets\Resources\UPF\Combat.xml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Assets\Resources\UPF\TestView.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

@@ -13,6 +13,8 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing.Visitors
 		{
 			base.DoVisit(node, context);
 
+            var control = obj as Control;
+
 			control.Style.Initialize(control);
 			control.Style.Apply(control);
 		}

@@ -119,8 +119,8 @@ namespace FirstWave.Unity.Gui
 			foreach (var c in controls)
 				c.Layout(screenSpace);
 
-			foreach (var c in controls)
-				c.Draw();
+            foreach (var c in controls)
+                c.DoDraw();
 
 			prevWidth = Screen.width;
 			prevHeight = Screen.height;

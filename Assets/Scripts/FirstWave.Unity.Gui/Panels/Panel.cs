@@ -27,7 +27,7 @@ namespace FirstWave.Unity.Gui.Panels
             foreach (var child in Children)
             {
                 if (child.Location.HasValue && child.Size.HasValue)
-                    child.Draw();
+                    child.DoDraw();
             }
         }
 

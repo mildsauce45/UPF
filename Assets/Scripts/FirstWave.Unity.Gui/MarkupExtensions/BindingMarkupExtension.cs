@@ -6,7 +6,7 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 {
     public class BindingMarkupExtension : MarkupExtension
     {
-        private Control target;
+        private object target;
 
         public override string Key { get { return "Binding"; } }
 
@@ -21,7 +21,7 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
             Mode = BindingMode.OneWay;
         }
 
-        public override void Load(Control c, string[] parms)
+        public override void Load(object c, string[] parms)
         {
             target = c;
 

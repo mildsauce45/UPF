@@ -55,12 +55,12 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing
 					return new StyleNodeVisitor();
 			}
 
-			if (!string.IsNullOrEmpty(node.NamespaceURI) && node.ParentNode.LocalName == "Resources")
-				return new NonControlResourceNodeVisitor();
-			else if (!string.IsNullOrEmpty(node.NamespaceURI))
-				return new CustomControlNodeVisitor();
-			else
-				return new ControlNodeVisitor();
+            if (node.ParentNode.LocalName == "Resources")
+            	return new NonControlResourceNodeVisitor();
+            else if (!string.IsNullOrEmpty(node.NamespaceURI))
+                return new CustomControlNodeVisitor();
+            else
+                return new ControlNodeVisitor();
 		}
 
 		internal static void LoadPanel(Panel panel, XmlNode panelXml, ParseContext context)

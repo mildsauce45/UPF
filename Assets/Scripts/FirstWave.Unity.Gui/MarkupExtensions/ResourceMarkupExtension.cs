@@ -9,7 +9,7 @@ namespace FirstWave.Unity.Gui.MarkupExtensions
 
         public string ResourceKey { get; private set; }
 
-        public override void Load(Control c, string[] parms)
+        public override void Load(object c, string[] parms)
         {
             if (parms.Length == 0)
                 return;

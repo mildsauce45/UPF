@@ -8,16 +8,16 @@ using System.Xml;
 
 namespace FirstWave.Unity.Gui.Utilities.Parsing.Visitors
 {
-	public class AttributeVisitor : IXamlNodeVisitor
+    public class AttributeVisitor : IXamlNodeVisitor
 	{
-		protected readonly Control control;
+        protected readonly object obj;
 		protected readonly Type controlType;
 
-		public AttributeVisitor(Control control)
-		{
-			this.control = control;
-			controlType = control.GetType();
-		}
+		public AttributeVisitor(Object obj)
+        {
+            this.obj = obj;
+            controlType = obj.GetType();
+        }
 
 		public void Visit(XmlNode node, ParseContext context)
 		{
@@ -75,10 +75,13 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing.Visitors
 				}
 			}
 
-			if (value is Binding)
-				control.SetBinding(control.GetDependencyProperty(attr.LocalName), value as Binding);
-			else
-				pi.SetValue(control, value, null);
+            if (value is Binding && obj is Control)
+            {
+                var control = obj as Control;
+                control.SetBinding(control.GetDependencyProperty(attr.LocalName), value as Binding);
+            }
+            else
+                pi.SetValue(obj, value, null);
 		}
 
 		private void LoadEvent(XmlAttribute attr, EventInfo ei, ParseContext context)
@@ -93,7 +96,7 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing.Visitors
 
 			var handler = Delegate.CreateDelegate(ei.EventHandlerType, context.ViewModel, handlerMethod);
 
-			ei.AddEventHandler(control, handler);
+            ei.AddEventHandler(obj, handler);
 		}
 
 		private object LoadMarkupExtension(string value, ParseContext context)
@@ -115,7 +118,7 @@ namespace FirstWave.Unity.Gui.Utilities.Parsing.Visitors
 			if (meTypeIndex >= 0)
 				parms = data.Substring(meTypeIndex + 1).Split(new char[] { ',' }).Select(s => s.Trim()).ToArray();
 
-			extension.Load(control, parms);
+			extension.Load(obj, parms);
 
 			return extension.GetValue(context.Resources);
 		}		

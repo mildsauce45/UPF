@@ -11,6 +11,9 @@
       <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal"/>
     </Template>
 
+    <RotateTransform Key="TestTransform" Angle="45" OriginX="0" OriginY="1"/>
+    <TranslateTransform Key="TT" X="20" Y="75"/>
+
     <Template Key="PartyMemberInfoTemplate">
       <Border Padding="10">
         <StackPanel>
@@ -44,7 +47,7 @@
   </Resources>
 
   <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
-    <Button Text="Add HP (Test Button)" OnClick="AddHP_Clicked"/>
+    <Button Text="Add HP (Test Button)" OnClick="AddHP_Clicked" />
   </StackPanel>
 
   <ItemsControl ItemTemplate="{Resource PartyMemberInfoTemplate}" ItemsSource="{Binding Party}" ItemsPanelTemplate="{Resource PartyMemberPanelTemplate}"/>

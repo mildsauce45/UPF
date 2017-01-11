@@ -4,6 +4,8 @@ using FirstWave.Unity.Gui.Enums;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Tranforms = FirstWave.Unity.Gui.Transforms;
+
 
 namespace FirstWave.Unity.Gui
 {
@@ -37,6 +39,9 @@ namespace FirstWave.Unity.Gui
 
 		public static readonly DependencyProperty EnabledProperty =
 			DependencyProperty.Register("Enabled", typeof(bool), typeof(Control), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty TransformProperty =
+            DependencyProperty.Register("Transform", typeof(Transforms.Transform), typeof(Control), new PropertyMetadata(null, false));
 
 		#endregion
 
@@ -100,6 +105,12 @@ namespace FirstWave.Unity.Gui
 			get { return (bool)GetValue(EnabledProperty); }
 			set { SetValue(EnabledProperty, value); }
 		}
+
+        public Transforms.Transform Transform
+        {
+            get { return (Transforms.Transform)GetValue(TransformProperty); }
+            set { SetValue(TransformProperty, value); }
+        }
 
 		public string Name { get; set; }
 
@@ -214,6 +225,17 @@ namespace FirstWave.Unity.Gui
 		public abstract void Draw();
 
 		#endregion
+
+        internal void DoDraw()
+        {
+            if (Transform != null)
+                Transform.TransformElement(this);
+
+            Draw();
+
+            if (Transform != null)
+                Transform.AfterTransform();
+        }
 
 		#region Layout Helpers
 
